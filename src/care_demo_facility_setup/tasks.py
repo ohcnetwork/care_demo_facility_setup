@@ -1,11 +1,13 @@
 from celery import current_app, shared_task
-from celery.schedules import crontab
-from django.utils.timezone import now
+
+from care_demo_facility_setup.models import SeedRun
+from care_demo_facility_setup.services.runner import DemoSeedRunner
 
 
 @shared_task
-def periodic_task_example():
-    print("This is an example task.")
+def execute_seed_run(run_external_id: str):
+    run = SeedRun.objects.get(external_id=run_external_id)
+    DemoSeedRunner(run).execute()
 
 
 @current_app.on_after_finalize.connect

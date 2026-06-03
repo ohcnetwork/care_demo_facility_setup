@@ -1,0 +1,106 @@
+{
+  "count": 10,
+  "phone_number_template": "+91{local_number}",
+  "patients": [
+    {
+      "ref": "patient:001",
+      "first_name": "Suresh",
+      "last_name": "Kumar",
+      "gender": "male",
+      "date_of_birth": "1999-01-15",
+      "blood_group": "A_positive",
+      "address": "Demo Patient Street 1, Local City",
+      "pincode": 560001
+    },
+    {
+      "ref": "patient:002",
+      "first_name": "Ramesh",
+      "last_name": "Sharma",
+      "gender": "male",
+      "date_of_birth": "1989-02-20",
+      "blood_group": "B_positive",
+      "address": "Demo Patient Street 2, Local City",
+      "pincode": 560001
+    },
+    {
+      "ref": "patient:003",
+      "first_name": "Mukesh",
+      "last_name": "Nair",
+      "gender": "male",
+      "date_of_birth": "1979-03-10",
+      "blood_group": "O_positive",
+      "address": "Demo Patient Street 3, Local City",
+      "pincode": 560001
+    },
+    {
+      "ref": "patient:004",
+      "first_name": "Ankit",
+      "last_name": "Reddy",
+      "gender": "male",
+      "date_of_birth": "1969-04-18",
+      "blood_group": "AB_positive",
+      "address": "Demo Patient Street 4, Local City",
+      "pincode": 560001
+    },
+    {
+      "ref": "patient:005",
+      "first_name": "Sachin",
+      "last_name": "Singh",
+      "gender": "male",
+      "date_of_birth": "1994-05-25",
+      "blood_group": "O_negative",
+      "address": "Demo Patient Street 5, Local City",
+      "pincode": 560001
+    },
+    {
+      "ref": "patient:006",
+      "first_name": "Sunil",
+      "last_name": "Patel",
+      "gender": "male",
+      "date_of_birth": "1996-06-12",
+      "blood_group": "A_negative",
+      "address": "Demo Patient Street 6, Local City",
+      "pincode": 560001
+    },
+    {
+      "ref": "patient:007",
+      "first_name": "Pooja",
+      "last_name": "Das",
+      "gender": "female",
+      "date_of_birth": "1984-07-30",
+      "blood_group": "B_negative",
+      "address": "Demo Patient Street 7, Local City",
+      "pincode": 560001
+    },
+    {
+      "ref": "patient:008",
+      "first_name": "Lalita",
+      "last_name": "Joshi",
+      "gender": "female",
+      "date_of_birth": "1976-08-14",
+      "blood_group": "AB_negative",
+      "address": "Demo Patient Street 8, Local City",
+      "pincode": 560001
+    },
+    {
+      "ref": "patient:009",
+      "first_name": "Priya",
+      "last_name": "Kumar",
+      "gender": "female",
+      "date_of_birth": "1991-09-21",
+      "blood_group": "O_positive",
+      "address": "Demo Patient Street 9, Local City",
+      "pincode": 560001
+    },
+    {
+      "ref": "patient:010",
+      "first_name": "Anjali",
+      "last_name": "Sharma",
+      "gender": "female",
+      "date_of_birth": "1987-10-05",
+      "blood_group": "A_positive",
+      "address": "Demo Patient Street 10, Local City",
+      "pincode": 560001
+    }
+  ]
+}

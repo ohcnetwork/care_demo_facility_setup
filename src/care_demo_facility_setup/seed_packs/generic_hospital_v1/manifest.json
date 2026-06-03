@@ -1,0 +1,29 @@
+{
+  "slug": "generic_hospital_v1",
+  "name": "Generic Hospital Demo Seed Pack",
+  "version": "1.0.0",
+  "description": "Packaged demo facility seed data converted from the original CSV import sheets.",
+  "resources": {
+    "facility": "facility.json",
+    "patients": "patients.json",
+    "lab_tests": "lab_tests.json",
+    "inventory_items": "inventory_items.json"
+  },
+  "profiles_dir": "profiles",
+  "source_csvs": {
+    "activities": "Sample import sheet - Activity-Lab.csv",
+    "charges": "Sample import sheet - Charge Lab.csv",
+    "observations": "Sample import sheet - Observation Lab Definition.csv",
+    "product_knowledge": "Sample import sheet - Product Knowledge.csv",
+    "specimens": "Sample import sheet - Specimen.csv"
+  },
+  "counts": {
+    "facility": 1,
+    "patients": 10,
+    "lab_tests": 33,
+    "inventory_items": 318,
+    "specimens": 18,
+    "observations": 64,
+    "charge_item_definitions": 33
+  }
+}

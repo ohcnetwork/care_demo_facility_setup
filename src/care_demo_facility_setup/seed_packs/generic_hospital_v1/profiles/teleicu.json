@@ -1,0 +1,22 @@
+{
+  "slug": "teleicu",
+  "name": "CARE TeleICU Demo",
+  "description": "Profile placeholder for TeleICU-flavoured demo setups. Keep separate from the default demo profile because environment mappings can differ.",
+  "allowed_hosts": [
+    "localhost",
+    "127.0.0.1"
+  ],
+  "geo_organization_ref": "profile:geo_organization",
+  "default_facility_ref": "facility:main",
+  "default_location_ref": "location:laboratory",
+  "default_healthcare_service_ref": "healthcare_service:laboratory",
+  "resource_categories": {
+    "activity_definition": "Lab Activities",
+    "charge_item_definition": "Lab Charges",
+    "product_knowledge": "Medicines"
+  },
+  "notes": [
+    "This profile is intentionally conservative until production TeleICU host mappings are confirmed.",
+    "Add exact allowed hosts before enabling non-local TeleICU setup runs."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "slug": "demo",
+  "name": "CARE Demo",
+  "description": "Default profile for the packaged CARE demo facility setup.",
+  "allowed_hosts": [
+    "localhost",
+    "127.0.0.1",
+    "care.ohc.network",
+    "careapi.ohc.network"
+  ],
+  "geo_organization_ref": "profile:geo_organization",
+  "default_facility_ref": "facility:main",
+  "default_location_ref": "location:laboratory",
+  "default_healthcare_service_ref": "healthcare_service:laboratory",
+  "resource_categories": {
+    "activity_definition": "Lab Activities",
+    "charge_item_definition": "Lab Charges",
+    "product_knowledge": "Medicines"
+  },
+  "notes": [
+    "V1 ships one packaged seed pack and uses this profile to validate where it can be run.",
+    "Environment-specific UUIDs should be resolved at runtime and persisted as SeedRunArtifact records."
+  ]
+}

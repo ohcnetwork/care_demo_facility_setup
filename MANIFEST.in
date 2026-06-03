@@ -8,3 +8,5 @@ recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 
 recursive-include docs *.md Makefile *.jpg *.png *.gif
+recursive-include src/care_demo_facility_setup/data *.csv
+recursive-include src/care_demo_facility_setup/seed_packs *.json
