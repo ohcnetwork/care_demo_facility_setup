@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from rest_framework.test import APIClient
-
 from care.fixtures.base import CareFixtureBase
+from rest_framework.test import APIClient
 
 
 class SeedAPIClient(APIClient):
@@ -51,6 +50,30 @@ class CareSeedClient:
 
     def create_facility(self, geo_organization: str, payload: dict):
         return self.base.create_facility(geo_organization, **payload)
+
+    def get_facility_organizations(self, facility_id: str):
+        return self.base.get_facility_organizations(facility_id)
+
+    def create_facility_organization(self, facility_id: str, payload: dict):
+        return self.base.create_facility_organization(facility_id, **payload)
+
+    def create_location(self, facility_id: str, payload: dict):
+        return self.base.create_location(facility_id, **payload)
+
+    def add_organization_to_location(
+        self,
+        facility_id: str,
+        location_id: str,
+        organization_id: str,
+    ):
+        return self.base.add_organization_to_location(
+            facility_id,
+            location_id,
+            organization_id,
+        )
+
+    def create_healthcare_service(self, facility_id: str, name: str, payload: dict):
+        return self.base.create_healthcare_service(facility_id, name, **payload)
 
     def create_patient(self, geo_organization: str, payload: dict):
         return self.base.create_patient(geo_organization, **payload)

@@ -6,6 +6,7 @@
   "resources": {
     "facility": "facility.json",
     "patients": "patients.json",
+    "facility_foundation": "facility_foundation.json",
     "lab_tests": "lab_tests.json",
     "inventory_items": "inventory_items.json"
   },
@@ -20,6 +21,9 @@
   "counts": {
     "facility": 1,
     "patients": 10,
+    "departments": 10,
+    "locations": 35,
+    "healthcare_services": 4,
     "lab_tests": 33,
     "inventory_items": 318,
     "specimens": 18,

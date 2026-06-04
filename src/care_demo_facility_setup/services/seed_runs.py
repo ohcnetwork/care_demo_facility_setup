@@ -15,6 +15,7 @@ PLANNED_STEPS = [
     ("validate", "Validate seed request"),
     ("facility", "Create demo facility"),
     ("patients", "Create demo patients"),
+    ("facility_foundation", "Create facility foundation"),
 ]
 
 
