@@ -7,6 +7,8 @@ from urllib.parse import urlparse
 
 from care.emr.models import Organization
 
+from care_demo_facility_setup.services.seed_step_registry import SeedStepRegistryError, get_seed_step_definitions
+
 PACKAGE = "care_demo_facility_setup.seed_packs"
 DEFAULT_PACK_SLUG = "generic_hospital_v1"
 
@@ -140,6 +142,11 @@ def validate_seed_request(
         )
 
     manifest = pack["manifest"]
+    try:
+        get_seed_step_definitions(manifest)
+    except SeedStepRegistryError as exc:
+        errors.append(str(exc))
+
     host = _normalize_host(current_host) or _normalize_host(care_base_url)
     allowed_hosts = profile.get("allowed_hosts", [])
     if host and allowed_hosts and host not in allowed_hosts:

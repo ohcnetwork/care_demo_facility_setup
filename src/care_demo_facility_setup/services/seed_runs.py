@@ -9,14 +9,8 @@ from care_demo_facility_setup.models import (
     SeedRunStep,
     SeedRunStepStatus,
 )
-from care_demo_facility_setup.services.seed_packs import validate_seed_request
-
-PLANNED_STEPS = [
-    ("validate", "Validate seed request"),
-    ("facility", "Create demo facility"),
-    ("patients", "Create demo patients"),
-    ("facility_foundation", "Create facility foundation"),
-]
+from care_demo_facility_setup.services.seed_packs import SeedPackError, load_seed_pack, validate_seed_request
+from care_demo_facility_setup.services.seed_step_registry import SeedStepRegistryError, get_seed_step_definitions
 
 
 def serialize_seed_run(run: SeedRun, include_details: bool = False) -> dict:
@@ -101,10 +95,10 @@ def create_seed_run(
         finished_date=now if dry_run or not validation.valid else None,
     )
 
-    for index, (key, title) in enumerate(PLANNED_STEPS, start=1):
+    for index, step_definition in enumerate(_planned_steps_for_pack(pack_slug), start=1):
         status = SeedRunStepStatus.PENDING
         message = ""
-        if key == "validate":
+        if step_definition.key == "validate":
             status = SeedRunStepStatus.SUCCEEDED if validation.valid else SeedRunStepStatus.FAILED
             message = "Validation passed" if validation.valid else "Validation failed"
         elif dry_run and validation.valid:
@@ -117,16 +111,24 @@ def create_seed_run(
         SeedRunStep.objects.create(
             run=run,
             order=index,
-            key=key,
-            title=title,
+            key=step_definition.key,
+            title=step_definition.title,
             status=status,
             message=message,
-            stats=validation.summary.get("counts", {}) if key == "validate" else {},
-            started_date=now if key == "validate" else None,
-            finished_date=(now if key == "validate" or status == SeedRunStepStatus.SKIPPED else None),
+            stats=validation.summary.get("counts", {}) if step_definition.key == "validate" else {},
+            started_date=now if step_definition.key == "validate" else None,
+            finished_date=(now if step_definition.key == "validate" or status == SeedRunStepStatus.SKIPPED else None),
         )
 
     return run
+
+
+def _planned_steps_for_pack(pack_slug: str):
+    try:
+        manifest = load_seed_pack(pack_slug)["manifest"]
+        return get_seed_step_definitions(manifest)
+    except (SeedPackError, SeedStepRegistryError):
+        return get_seed_step_definitions()
 
 
 def enqueue_seed_run(run_external_id: str):

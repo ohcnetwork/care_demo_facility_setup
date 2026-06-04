@@ -12,10 +12,9 @@ from care_demo_facility_setup.services.care_seed_client import CareSeedClient
 from care_demo_facility_setup.services.seed_artifacts import SeedArtifactStore
 from care_demo_facility_setup.services.seed_errors import SeedRunExecutionError
 from care_demo_facility_setup.services.seed_packs import load_profile, load_seed_pack
-from care_demo_facility_setup.services.seeders import (
-    FacilityFoundationSeeder,
-    FacilitySeeder,
-    PatientSeeder,
+from care_demo_facility_setup.services.seed_step_registry import (
+    SeedStepDefinition,
+    get_executable_seed_step_definitions,
 )
 
 
@@ -42,9 +41,8 @@ class DemoSeedRunner:
 
         self._mark_run(SeedRunStatus.RUNNING, started=True)
         try:
-            self._execute_facility_step()
-            self._execute_patients_step()
-            self._execute_facility_foundation_step()
+            for step_definition in get_executable_seed_step_definitions(self.pack["manifest"]):
+                self._execute_seed_step(step_definition)
         except Exception as exc:
             self._mark_pending_steps_skipped("Skipped because an earlier step failed.")
             self._mark_run(
@@ -55,78 +53,14 @@ class DemoSeedRunner:
             raise
         self._mark_run(SeedRunStatus.SUCCEEDED, error="", finished=True)
 
-    def _execute_facility_step(self):
-        step = self._get_step("facility")
+    def _execute_seed_step(self, step_definition: SeedStepDefinition):
+        step = self._get_step(step_definition.key)
         self._mark_step(step, SeedRunStepStatus.RUNNING, started=True)
+        stats = step_definition.initial_stats()
         try:
-            message, stats = FacilitySeeder(
-                client=self.client,
-                artifacts=self.artifacts,
-                geo_organization=self.geo_organization,
-                run_id=self.run.id,
-            ).seed(step=step, facility_template=self.pack["facility"])
-            self._mark_step(
-                step,
-                SeedRunStepStatus.SUCCEEDED,
-                message=message,
-                stats=stats,
-                finished=True,
-            )
-        except Exception as exc:
-            self._mark_step(
-                step,
-                SeedRunStepStatus.FAILED,
-                message=self._safe_error(exc),
-                finished=True,
-            )
-            raise
-
-    def _execute_patients_step(self):
-        step = self._get_step("patients")
-        self._mark_step(step, SeedRunStepStatus.RUNNING, started=True)
-        stats = {"created": 0}
-        try:
-            message, stats = PatientSeeder(
-                client=self.client,
-                artifacts=self.artifacts,
-                geo_organization=self.geo_organization,
-                run_id=self.run.id,
-            ).seed(step=step, patients_config=self.pack["patients"])
-            self._mark_step(
-                step,
-                SeedRunStepStatus.SUCCEEDED,
-                message=message,
-                stats=stats,
-                finished=True,
-            )
-        except Exception as exc:
-            self._mark_step(
-                step,
-                SeedRunStepStatus.FAILED,
-                message=self._safe_error(exc),
-                stats=stats,
-                finished=True,
-            )
-            raise
-
-    def _execute_facility_foundation_step(self):
-        step = self._get_step("facility_foundation")
-        self._mark_step(step, SeedRunStepStatus.RUNNING, started=True)
-        stats = {
-            "departments_created": 0,
-            "departments_reused": 0,
-            "locations_created": 0,
-            "healthcare_services_created": 0,
-        }
-        try:
-            message, stats = FacilityFoundationSeeder(
-                client=self.client,
-                artifacts=self.artifacts,
-            ).seed(
-                step=step,
-                facility_template=self.pack["facility"],
-                foundation=self.pack["facility_foundation"],
-            )
+            if not step_definition.executor:
+                raise SeedRunExecutionError(f"Seed step {step_definition.key} is not executable.")
+            message, stats = step_definition.executor(self, step)
             self._mark_step(
                 step,
                 SeedRunStepStatus.SUCCEEDED,
