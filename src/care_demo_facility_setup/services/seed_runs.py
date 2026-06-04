@@ -9,8 +9,9 @@ from care_demo_facility_setup.models import (
     SeedRunStep,
     SeedRunStepStatus,
 )
-from care_demo_facility_setup.services.seed_packs import SeedPackError, load_seed_pack, validate_seed_request
+from care_demo_facility_setup.services.seed_packs import SeedPackError, load_seed_pack
 from care_demo_facility_setup.services.seed_step_registry import SeedStepRegistryError, get_seed_step_definitions
+from care_demo_facility_setup.services.seed_validation import validate_seed_request
 
 
 def serialize_seed_run(run: SeedRun, include_details: bool = False) -> dict:

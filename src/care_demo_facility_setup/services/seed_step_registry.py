@@ -9,6 +9,12 @@ from care_demo_facility_setup.services.seeders import (
     FacilitySeeder,
     PatientSeeder,
 )
+from care_demo_facility_setup.services.validators import (
+    SeedStepValidator,
+    validate_facility,
+    validate_facility_foundation,
+    validate_patients,
+)
 
 SeedStepExecutor = Callable[[object, SeedRunStep], tuple[str, dict]]
 InitialStatsFactory = Callable[[], dict]
@@ -25,6 +31,7 @@ class SeedStepDefinition:
     resource_key: str | None = None
     depends_on: tuple[str, ...] = ()
     executor: SeedStepExecutor | None = None
+    validator: SeedStepValidator | None = None
     initial_stats: InitialStatsFactory = dict
 
     @property
@@ -88,6 +95,7 @@ AVAILABLE_SEED_STEPS = (
         resource_key="facility",
         depends_on=("validate",),
         executor=_seed_facility,
+        validator=validate_facility,
     ),
     SeedStepDefinition(
         key="patients",
@@ -95,6 +103,7 @@ AVAILABLE_SEED_STEPS = (
         resource_key="patients",
         depends_on=("facility",),
         executor=_seed_patients,
+        validator=validate_patients,
         initial_stats=lambda: {"created": 0},
     ),
     SeedStepDefinition(
@@ -103,6 +112,7 @@ AVAILABLE_SEED_STEPS = (
         resource_key="facility_foundation",
         depends_on=("facility",),
         executor=_seed_facility_foundation,
+        validator=validate_facility_foundation,
         initial_stats=_facility_foundation_initial_stats,
     ),
 )
