@@ -9,6 +9,8 @@
     "facility_foundation": "facility_foundation.json",
     "specimens": "specimens.json",
     "observations": "observations.json",
+    "charge_item_definitions": "charge_item_definitions.json",
+    "charge_item_categories": "charge_item_categories.json",
     "lab_tests": "lab_tests.json",
     "inventory_items": "inventory_items.json"
   },
@@ -30,6 +32,7 @@
     "inventory_items": 318,
     "specimens": 18,
     "observations": 64,
-    "charge_item_definitions": 33
+    "charge_item_definitions": 33,
+    "charge_item_categories": 3
   }
 }

@@ -84,6 +84,12 @@ class CareSeedClient:
     def create_observation_definition(self, facility_id: str, payload: dict):
         return self.base.create_observation_definition(facility=facility_id, **payload)
 
+    def create_charge_item_definition(self, facility_id: str, payload: dict):
+        return self.base.create_charge_item_definition(facility_id, **payload)
+
+    def create_resource_category(self, facility_id: str, payload: dict):
+        return self.base.create_resource_category(facility_id, **payload)
+
 
 def _with_trailing_slash(path):
     path = str(path)

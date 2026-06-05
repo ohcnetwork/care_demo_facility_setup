@@ -61,3 +61,9 @@ def build_observation_definition_payload(template: dict) -> dict:
     payload = {key: value for key, value in template.items() if key != "ref"}
     payload.setdefault("status", "active")
     return payload
+
+
+def build_charge_item_definition_payload(template: dict) -> dict:
+    payload = {key: value for key, value in template.items() if key != "ref"}
+    payload.setdefault("status", "active")
+    return payload

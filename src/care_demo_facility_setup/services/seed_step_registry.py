@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from care_demo_facility_setup.models import SeedRunStep
 from care_demo_facility_setup.services.seed_context import SeedContext, SeedResult
 from care_demo_facility_setup.services.seeders import (
+    ChargeItemDefinitionSeeder,
     FacilityFoundationSeeder,
     FacilitySeeder,
     ObservationDefinitionSeeder,
@@ -14,6 +15,7 @@ from care_demo_facility_setup.services.seeders import (
 )
 from care_demo_facility_setup.services.validators import (
     SeedStepValidator,
+    validate_charge_item_definitions,
     validate_facility,
     validate_facility_foundation,
     validate_observation_definitions,
@@ -109,6 +111,22 @@ def _seed_observation_definitions(context: SeedContext, step: SeedRunStep) -> Se
     return SeedResult(message=message, stats=stats)
 
 
+def _seed_charge_item_definitions(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = ChargeItemDefinitionSeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+    ).seed(
+        step=step,
+        charges_config=context.pack["charge_item_definitions"],
+        facility_template=context.pack["facility"],
+        categories_config=context.pack.get(
+            "charge_item_categories",
+            [{"title": "Lab Tests", "slug_value": "lab-tests"}],
+        ),
+    )
+    return SeedResult(message=message, stats=stats)
+
+
 DEFAULT_STEP_KEYS = (
     "validate",
     "facility",
@@ -116,6 +134,7 @@ DEFAULT_STEP_KEYS = (
     "facility_foundation",
     "specimen_definitions",
     "observation_definitions",
+    "charge_item_definitions",
 )
 
 AVAILABLE_SEED_STEPS = (
@@ -166,6 +185,15 @@ AVAILABLE_SEED_STEPS = (
         executor=_seed_observation_definitions,
         validator=validate_observation_definitions,
         initial_stats=lambda: {"created": 0},
+    ),
+    SeedStepDefinition(
+        key="charge_item_definitions",
+        title="Create charge item definitions",
+        resource_key="charge_item_definitions",
+        depends_on=("facility",),
+        executor=_seed_charge_item_definitions,
+        validator=validate_charge_item_definitions,
+        initial_stats=lambda: {"created": 0, "categories_created": 0},
     ),
 )
 
