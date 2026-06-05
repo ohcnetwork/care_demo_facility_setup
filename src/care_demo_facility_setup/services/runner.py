@@ -10,6 +10,7 @@ from care_demo_facility_setup.models import (
 )
 from care_demo_facility_setup.services.care_seed_client import CareSeedClient
 from care_demo_facility_setup.services.seed_artifacts import SeedArtifactStore
+from care_demo_facility_setup.services.seed_context import SeedContext
 from care_demo_facility_setup.services.seed_errors import SeedRunExecutionError
 from care_demo_facility_setup.services.seed_packs import load_profile, load_seed_pack
 from care_demo_facility_setup.services.seed_step_registry import (
@@ -22,10 +23,15 @@ class DemoSeedRunner:
     def __init__(self, run: SeedRun):
         self.run = run
         self.pack = load_seed_pack(run.pack_slug)
-        self.profile = load_profile(run.pack_slug, run.profile_slug)
-        self.geo_organization = self.profile["geo_organization_external_id"]
-        self.client = CareSeedClient(run.requested_by)
-        self.artifacts = SeedArtifactStore(run)
+        profile = load_profile(run.pack_slug, run.profile_slug)
+        self.context = SeedContext(
+            client=CareSeedClient(run.requested_by),
+            artifacts=SeedArtifactStore(run),
+            geo_organization=profile["geo_organization_external_id"],
+            run=run,
+            pack=self.pack,
+            profile=profile,
+        )
 
     def execute(self):
         if self.run.status in {
@@ -60,12 +66,12 @@ class DemoSeedRunner:
         try:
             if not step_definition.executor:
                 raise SeedRunExecutionError(f"Seed step {step_definition.key} is not executable.")
-            message, stats = step_definition.executor(self, step)
+            result = step_definition.executor(self.context, step)
             self._mark_step(
                 step,
                 SeedRunStepStatus.SUCCEEDED,
-                message=message,
-                stats=stats,
+                message=result.message,
+                stats=result.stats,
                 finished=True,
             )
         except Exception as exc:

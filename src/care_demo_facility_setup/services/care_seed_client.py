@@ -78,6 +78,12 @@ class CareSeedClient:
     def create_patient(self, geo_organization: str, payload: dict):
         return self.base.create_patient(geo_organization, **payload)
 
+    def create_specimen_definition(self, facility_id: str, payload: dict):
+        return self.base.create_specimen_definition(facility_id, **payload)
+
+    def create_observation_definition(self, facility_id: str, payload: dict):
+        return self.base.create_observation_definition(facility=facility_id, **payload)
+
 
 def _with_trailing_slash(path):
     path = str(path)

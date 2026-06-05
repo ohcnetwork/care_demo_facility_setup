@@ -49,3 +49,15 @@ def patient_phone_number(patients_config: dict, index: int, run_id: int) -> str:
         "+91{local_number}",
     )
     return phone_template.format(local_number=local_number, run_number=run_id, index=index)
+
+
+def build_specimen_definition_payload(template: dict) -> dict:
+    payload = {key: value for key, value in template.items() if key != "ref"}
+    payload.setdefault("status", "active")
+    return payload
+
+
+def build_observation_definition_payload(template: dict) -> dict:
+    payload = {key: value for key, value in template.items() if key != "ref"}
+    payload.setdefault("status", "active")
+    return payload

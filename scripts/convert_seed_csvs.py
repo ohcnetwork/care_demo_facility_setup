@@ -52,7 +52,7 @@ def coding(system: Any, code: Any, display: Any) -> dict[str, str] | None:
     system = clean(system)
     code = clean(code)
     display = clean(display)
-    if not (system or code or display):
+    if not code:
         return None
     return {"system": system, "code": code, "display": display}
 
@@ -307,6 +307,8 @@ def build_seed_pack() -> None:
             "version": "1.0.0",
             "description": "Packaged demo facility seed data converted from the original CSV import sheets.",
             "resources": {
+                "specimens": "specimens.json",
+                "observations": "observations.json",
                 "lab_tests": "lab_tests.json",
                 "inventory_items": "inventory_items.json",
             },
@@ -320,6 +322,8 @@ def build_seed_pack() -> None:
                 "charge_item_definitions": len(charges),
             },
         },
+        "specimens.json": list(specimens.values()),
+        "observations.json": list(observations.values()),
         "lab_tests.json": lab_tests,
         "inventory_items.json": inventory_items,
     }

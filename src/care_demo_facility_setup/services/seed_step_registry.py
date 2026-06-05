@@ -4,19 +4,24 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 
 from care_demo_facility_setup.models import SeedRunStep
+from care_demo_facility_setup.services.seed_context import SeedContext, SeedResult
 from care_demo_facility_setup.services.seeders import (
     FacilityFoundationSeeder,
     FacilitySeeder,
+    ObservationDefinitionSeeder,
     PatientSeeder,
+    SpecimenDefinitionSeeder,
 )
 from care_demo_facility_setup.services.validators import (
     SeedStepValidator,
     validate_facility,
     validate_facility_foundation,
+    validate_observation_definitions,
     validate_patients,
+    validate_specimen_definitions,
 )
 
-SeedStepExecutor = Callable[[object, SeedRunStep], tuple[str, dict]]
+SeedStepExecutor = Callable[[SeedContext, SeedRunStep], SeedResult]
 InitialStatsFactory = Callable[[], dict]
 
 
@@ -39,22 +44,24 @@ class SeedStepDefinition:
         return self.executor is not None
 
 
-def _seed_facility(context: object, step: SeedRunStep) -> tuple[str, dict]:
-    return FacilitySeeder(
+def _seed_facility(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = FacilitySeeder(
         client=context.client,
         artifacts=context.artifacts,
         geo_organization=context.geo_organization,
         run_id=context.run.id,
     ).seed(step=step, facility_template=context.pack["facility"])
+    return SeedResult(message=message, stats=stats)
 
 
-def _seed_patients(context: object, step: SeedRunStep) -> tuple[str, dict]:
-    return PatientSeeder(
+def _seed_patients(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = PatientSeeder(
         client=context.client,
         artifacts=context.artifacts,
         geo_organization=context.geo_organization,
         run_id=context.run.id,
     ).seed(step=step, patients_config=context.pack["patients"])
+    return SeedResult(message=message, stats=stats)
 
 
 def _facility_foundation_initial_stats() -> dict:
@@ -66,8 +73,8 @@ def _facility_foundation_initial_stats() -> dict:
     }
 
 
-def _seed_facility_foundation(context: object, step: SeedRunStep) -> tuple[str, dict]:
-    return FacilityFoundationSeeder(
+def _seed_facility_foundation(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = FacilityFoundationSeeder(
         client=context.client,
         artifacts=context.artifacts,
     ).seed(
@@ -75,6 +82,31 @@ def _seed_facility_foundation(context: object, step: SeedRunStep) -> tuple[str, 
         facility_template=context.pack["facility"],
         foundation=context.pack["facility_foundation"],
     )
+    return SeedResult(message=message, stats=stats)
+
+
+def _seed_specimen_definitions(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = SpecimenDefinitionSeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+    ).seed(
+        step=step,
+        specimens_config=context.pack["specimens"],
+        facility_template=context.pack["facility"],
+    )
+    return SeedResult(message=message, stats=stats)
+
+
+def _seed_observation_definitions(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = ObservationDefinitionSeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+    ).seed(
+        step=step,
+        observations_config=context.pack["observations"],
+        facility_template=context.pack["facility"],
+    )
+    return SeedResult(message=message, stats=stats)
 
 
 DEFAULT_STEP_KEYS = (
@@ -82,6 +114,8 @@ DEFAULT_STEP_KEYS = (
     "facility",
     "patients",
     "facility_foundation",
+    "specimen_definitions",
+    "observation_definitions",
 )
 
 AVAILABLE_SEED_STEPS = (
@@ -114,6 +148,24 @@ AVAILABLE_SEED_STEPS = (
         executor=_seed_facility_foundation,
         validator=validate_facility_foundation,
         initial_stats=_facility_foundation_initial_stats,
+    ),
+    SeedStepDefinition(
+        key="specimen_definitions",
+        title="Create specimen definitions",
+        resource_key="specimens",
+        depends_on=("facility",),
+        executor=_seed_specimen_definitions,
+        validator=validate_specimen_definitions,
+        initial_stats=lambda: {"created": 0},
+    ),
+    SeedStepDefinition(
+        key="observation_definitions",
+        title="Create observation definitions",
+        resource_key="observations",
+        depends_on=("facility",),
+        executor=_seed_observation_definitions,
+        validator=validate_observation_definitions,
+        initial_stats=lambda: {"created": 0},
     ),
 )
 

@@ -13,13 +13,13 @@ from care_demo_facility_setup.services.seed_packs import (
     SeedPackError,
     list_profiles,
     list_seed_packs,
-    validate_seed_request,
 )
 from care_demo_facility_setup.services.seed_runs import (
     create_seed_run,
     enqueue_seed_run,
     serialize_seed_run,
 )
+from care_demo_facility_setup.services.seed_validation import validate_seed_request
 
 
 class BaseViewSet(GenericViewSet):
