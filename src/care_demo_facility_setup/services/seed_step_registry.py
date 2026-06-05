@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from care_demo_facility_setup.models import SeedRunStep
 from care_demo_facility_setup.services.seed_context import SeedContext, SeedResult
 from care_demo_facility_setup.services.seeders import (
+    ActivityDefinitionSeeder,
     ChargeItemDefinitionSeeder,
     FacilityFoundationSeeder,
     FacilitySeeder,
@@ -15,6 +16,7 @@ from care_demo_facility_setup.services.seeders import (
 )
 from care_demo_facility_setup.services.validators import (
     SeedStepValidator,
+    validate_activity_definitions,
     validate_charge_item_definitions,
     validate_facility,
     validate_facility_foundation,
@@ -127,6 +129,22 @@ def _seed_charge_item_definitions(context: SeedContext, step: SeedRunStep) -> Se
     return SeedResult(message=message, stats=stats)
 
 
+def _seed_activity_definitions(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = ActivityDefinitionSeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+    ).seed(
+        step=step,
+        activities_config=context.pack["activity_definitions"],
+        facility_template=context.pack["facility"],
+        categories_config=context.pack.get(
+            "activity_categories",
+            [{"title": "Laboratory", "slug_value": "laboratory"}],
+        ),
+    )
+    return SeedResult(message=message, stats=stats)
+
+
 DEFAULT_STEP_KEYS = (
     "validate",
     "facility",
@@ -135,6 +153,7 @@ DEFAULT_STEP_KEYS = (
     "specimen_definitions",
     "observation_definitions",
     "charge_item_definitions",
+    "activity_definitions",
 )
 
 AVAILABLE_SEED_STEPS = (
@@ -193,6 +212,21 @@ AVAILABLE_SEED_STEPS = (
         depends_on=("facility",),
         executor=_seed_charge_item_definitions,
         validator=validate_charge_item_definitions,
+        initial_stats=lambda: {"created": 0, "categories_created": 0},
+    ),
+    SeedStepDefinition(
+        key="activity_definitions",
+        title="Create activity definitions",
+        resource_key="activity_definitions",
+        depends_on=(
+            "facility",
+            "facility_foundation",
+            "specimen_definitions",
+            "observation_definitions",
+            "charge_item_definitions",
+        ),
+        executor=_seed_activity_definitions,
+        validator=validate_activity_definitions,
         initial_stats=lambda: {"created": 0, "categories_created": 0},
     ),
 )

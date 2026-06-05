@@ -3,6 +3,7 @@ from care_demo_facility_setup.services.validators.base import (
     SeedValidationContext,
     ValidationAccumulator,
 )
+from care_demo_facility_setup.services.validators.activity_definition import validate_activity_definitions
 from care_demo_facility_setup.services.validators.charge_item_definition import validate_charge_item_definitions
 from care_demo_facility_setup.services.validators.facility import validate_facility
 from care_demo_facility_setup.services.validators.facility_foundation import validate_facility_foundation
@@ -14,6 +15,7 @@ __all__ = [
     "SeedStepValidator",
     "SeedValidationContext",
     "ValidationAccumulator",
+    "validate_activity_definitions",
     "validate_charge_item_definitions",
     "validate_facility",
     "validate_facility_foundation",

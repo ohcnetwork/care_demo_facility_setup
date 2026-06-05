@@ -11,6 +11,8 @@
     "observations": "observations.json",
     "charge_item_definitions": "charge_item_definitions.json",
     "charge_item_categories": "charge_item_categories.json",
+    "activity_definitions": "activity_definitions.json",
+    "activity_categories": "activity_categories.json",
     "lab_tests": "lab_tests.json",
     "inventory_items": "inventory_items.json"
   },
@@ -29,10 +31,11 @@
     "locations": 35,
     "healthcare_services": 4,
     "lab_tests": 33,
-    "inventory_items": 318,
     "specimens": 18,
     "observations": 64,
     "charge_item_definitions": 33,
-    "charge_item_categories": 3
+    "charge_item_categories": 3,
+    "activity_definitions": 33,
+    "activity_categories": 1
   }
 }

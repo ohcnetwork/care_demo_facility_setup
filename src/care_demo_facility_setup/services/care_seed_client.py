@@ -90,6 +90,9 @@ class CareSeedClient:
     def create_resource_category(self, facility_id: str, payload: dict):
         return self.base.create_resource_category(facility_id, **payload)
 
+    def create_activity_definition(self, facility_id: str, payload: dict):
+        return self.base.create_activity_definition(facility_id, **payload)
+
 
 def _with_trailing_slash(path):
     path = str(path)

@@ -20,6 +20,15 @@ class SeedArtifactStore:
             raise SeedRunExecutionError(f"Artifact {ref} does not contain a resource id.")
         return str(artifact.resource_external_id)
 
+    def slug(self, ref: str) -> str:
+        try:
+            artifact = SeedRunArtifact.objects.get(run=self.run, ref=ref)
+        except SeedRunArtifact.DoesNotExist as exc:
+            raise SeedRunExecutionError(f"Missing required artifact: {ref}") from exc
+        if not artifact.slug:
+            raise SeedRunExecutionError(f"Artifact {ref} does not contain a slug.")
+        return str(artifact.slug)
+
     def store(
         self,
         *,

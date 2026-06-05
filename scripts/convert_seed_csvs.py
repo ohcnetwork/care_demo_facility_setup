@@ -27,6 +27,10 @@ CSV_FILES = {
 
 SNOMED_SYSTEM = "http://snomed.info/sct"
 
+LOCATION_NAME_ALIASES = {
+    "Laboratory": "1st Floor Lab",
+}
+
 
 def clean(value: Any) -> str:
     return str(value or "").strip()
@@ -55,6 +59,68 @@ def coding(system: Any, code: Any, display: Any) -> dict[str, str] | None:
     if not code:
         return None
     return {"system": system, "code": code, "display": display}
+
+
+def coding_list(system: Any, code: Any, display: Any) -> list[dict[str, str]]:
+    systems = split_refs(system)
+    codes = split_refs(code)
+    displays = split_refs(display)
+    codings: list[dict[str, str]] = []
+    for index, code_value in enumerate(codes):
+        codings.append(
+            {
+                "system": systems[index] if index < len(systems) else (systems[-1] if systems else ""),
+                "code": code_value,
+                "display": displays[index] if index < len(displays) else "",
+            }
+        )
+    return codings
+
+
+def alias_location_name(name: str) -> str:
+    return LOCATION_NAME_ALIASES.get(name, name)
+
+
+def _foundation_name_to_ref(entries: list[dict[str, Any]]) -> dict[str, str]:
+    mapping: dict[str, str] = {}
+    for entry in entries:
+        name = clean(entry.get("name"))
+        ref = clean(entry.get("ref"))
+        if name and ref:
+            mapping[name] = ref
+    return mapping
+
+
+def load_foundation_refs() -> tuple[dict[str, str], dict[str, str]]:
+    foundation = json.loads((SEED_PACK_DIR / "facility_foundation.json").read_text(encoding="utf-8"))
+    return (
+        _foundation_name_to_ref(foundation.get("locations", [])),
+        _foundation_name_to_ref(foundation.get("healthcare_services", [])),
+    )
+
+
+def resolve_location_ref(name: str, location_refs_by_name: dict[str, str]) -> str:
+    foundation_name = alias_location_name(clean(name))
+    ref = location_refs_by_name.get(foundation_name)
+    if not ref:
+        raise ValueError(
+            f"Activity references location '{name}' (resolved to '{foundation_name}'), "
+            "which has no matching ref in facility_foundation.json."
+        )
+    return ref
+
+
+def resolve_service_ref(name: str, service_refs_by_name: dict[str, str]) -> str | None:
+    name = clean(name)
+    if not name:
+        return None
+    ref = service_refs_by_name.get(name)
+    if not ref:
+        raise ValueError(
+            f"Activity references healthcare service '{name}', "
+            "which has no matching ref in facility_foundation.json."
+        )
+    return ref
 
 
 def split_refs(value: Any) -> list[str]:
@@ -195,7 +261,11 @@ def charge_payload(row: dict[str, str]) -> dict[str, Any]:
     }
 
 
-def activity_payload(row: dict[str, str]) -> dict[str, Any]:
+def activity_payload(
+    row: dict[str, str],
+    location_refs_by_name: dict[str, str],
+    service_refs_by_name: dict[str, str],
+) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "title": row["title"],
         "slug_value": row["slug_value"],
@@ -206,20 +276,19 @@ def activity_payload(row: dict[str, str]) -> dict[str, Any]:
         "kind": "service_request",
         "category_name": row["category_name"] or "Laboratory",
         "code": coding(row["code_system"], row["code_value"], row["code_display"]),
-        "diagnostic_report_codes": [],
+        "diagnostic_report_codes": coding_list(
+            row["diagnostic_report_system"],
+            row["diagnostic_report_code"],
+            row["diagnostic_report_display"],
+        ),
         "specimen_refs": split_refs(row["specimen_slugs"]),
         "observation_refs": split_refs(row["observation_slugs"]),
         "charge_item_definition_refs": split_refs(row["charge_item_slugs"]),
-        "location_names": split_refs(row["location_names"]),
-        "healthcare_service_name": row["healthcare_service_name"] or None,
+        "location_refs": [
+            resolve_location_ref(name, location_refs_by_name) for name in split_refs(row["location_names"])
+        ],
+        "healthcare_service_ref": resolve_service_ref(row["healthcare_service_name"], service_refs_by_name),
     }
-    diagnostic_report_code = coding(
-        row["diagnostic_report_system"],
-        row["diagnostic_report_code"],
-        row["diagnostic_report_display"],
-    )
-    if diagnostic_report_code:
-        payload["diagnostic_report_codes"].append(diagnostic_report_code)
     for key, value in {
         "derived_from_uri": optional(row["derived_from_uri"]),
         "body_site": coding(row["body_site_system"], row["body_site_code"], row["body_site_display"]),
@@ -268,10 +337,20 @@ def build_seed_pack() -> None:
     specimens = {row["slug_value"]: specimen_payload(row) for row in rows["specimens"]}
     observations = {row["slug_value"]: observation_payload(row) for row in rows["observations"]}
     charges = {row["slug_value"]: charge_payload(row) for row in rows["charges"]}
+    charge_item_categories = [
+        {"title": "Lab Tests", "slug_value": "lab-tests"},
+        {"title": "Bed Charges", "slug_value": "bed-charges"},
+        {"title": "Medicine", "slug_value": "medicine"},
+    ]
+    activity_categories = [
+        {"title": "Laboratory", "slug_value": "laboratory"},
+    ]
+
+    location_refs_by_name, service_refs_by_name = load_foundation_refs()
 
     lab_tests = []
     for row in rows["activities"]:
-        activity = activity_payload(row)
+        activity = activity_payload(row, location_refs_by_name, service_refs_by_name)
         inferred_charge = f"charge-{slug_key(row['slug_value'])}"
         charge_refs = activity.get("charge_item_definition_refs") or [inferred_charge]
         lab_tests.append(
@@ -285,6 +364,15 @@ def build_seed_pack() -> None:
                 "activity": activity,
             }
         )
+
+    activity_definitions = []
+    for row in rows["activities"]:
+        activity = activity_payload(row, location_refs_by_name, service_refs_by_name)
+        activity.pop("category_name", None)
+        inferred_charge = f"charge-{slug_key(row['slug_value'])}"
+        charge_refs = activity.get("charge_item_definition_refs") or [inferred_charge]
+        activity["charge_item_definition_refs"] = [ref for ref in charge_refs if ref in charges]
+        activity_definitions.append(activity)
 
     inventory_items = [
         {
@@ -309,6 +397,10 @@ def build_seed_pack() -> None:
             "resources": {
                 "specimens": "specimens.json",
                 "observations": "observations.json",
+                "charge_item_definitions": "charge_item_definitions.json",
+                "charge_item_categories": "charge_item_categories.json",
+                "activity_definitions": "activity_definitions.json",
+                "activity_categories": "activity_categories.json",
                 "lab_tests": "lab_tests.json",
                 "inventory_items": "inventory_items.json",
             },
@@ -320,10 +412,17 @@ def build_seed_pack() -> None:
                 "specimens": len(specimens),
                 "observations": len(observations),
                 "charge_item_definitions": len(charges),
+                "charge_item_categories": len(charge_item_categories),
+                "activity_definitions": len(activity_definitions),
+                "activity_categories": len(activity_categories),
             },
         },
         "specimens.json": list(specimens.values()),
         "observations.json": list(observations.values()),
+        "charge_item_definitions.json": list(charges.values()),
+        "charge_item_categories.json": charge_item_categories,
+        "activity_definitions.json": activity_definitions,
+        "activity_categories.json": activity_categories,
         "lab_tests.json": lab_tests,
         "inventory_items.json": inventory_items,
     }

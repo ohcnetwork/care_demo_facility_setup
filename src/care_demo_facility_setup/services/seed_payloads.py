@@ -67,3 +67,19 @@ def build_charge_item_definition_payload(template: dict) -> dict:
     payload = {key: value for key, value in template.items() if key != "ref"}
     payload.setdefault("status", "active")
     return payload
+
+
+def build_activity_definition_payload(template: dict) -> dict:
+    resolution_keys = {
+        "ref",
+        "category",
+        "category_name",
+        "specimen_refs",
+        "observation_refs",
+        "charge_item_definition_refs",
+        "location_names",
+        "healthcare_service_name",
+    }
+    payload = {key: value for key, value in template.items() if key not in resolution_keys}
+    payload.setdefault("status", "active")
+    return payload
