@@ -7,14 +7,19 @@
     "facility": "facility.json",
     "patients": "patients.json",
     "facility_foundation": "facility_foundation.json",
+    "users": "users.json",
+    "schedules": "schedules.json",
+    "token_categories": "token_categories.json",
     "specimens": "specimens.json",
     "observations": "observations.json",
     "charge_item_definitions": "charge_item_definitions.json",
     "charge_item_categories": "charge_item_categories.json",
     "activity_definitions": "activity_definitions.json",
     "activity_categories": "activity_categories.json",
-    "lab_tests": "lab_tests.json",
-    "inventory_items": "inventory_items.json"
+    "inventory_items": "inventory_items.json",
+    "clinical_scenarios": "clinical_scenarios.json",
+    "clinical_visits": "clinical_visits.json",
+    "questionnaires": "questionnaires.json"
   },
   "profiles_dir": "profiles",
   "source_csvs": {
@@ -28,15 +33,20 @@
     "facility": 1,
     "patients": 10,
     "departments": 10,
-    "locations": 35,
+    "locations": 38,
     "healthcare_services": 4,
-    "lab_tests": 33,
+    "users": 4,
+    "schedules": 1,
+    "token_categories": 2,
     "specimens": 18,
     "observations": 64,
     "charge_item_definitions": 33,
     "charge_item_categories": 3,
     "activity_definitions": 33,
     "activity_categories": 1,
-    "inventory_items": 318
+    "inventory_items": 318,
+    "clinical_scenarios": 5,
+    "clinical_visits": 25,
+    "questionnaires": 2
   }
 }

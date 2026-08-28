@@ -1,0 +1,42 @@
+{
+  "op_closed_per_patient": 2,
+  "op_org_refs": [
+    "department:medical_surgical",
+    "department:pediatrics",
+    "department:cardiology",
+    "department:oncology",
+    "department:icu",
+    "department:emergency"
+  ],
+  "ip_in_progress": [
+    {
+      "patient_ref": "patient:001",
+      "bed_ref": "location:bed_101_a",
+      "org_ref": "department:medical_surgical"
+    },
+    {
+      "patient_ref": "patient:002",
+      "bed_ref": "location:bed_102_a",
+      "org_ref": "department:medical_surgical"
+    },
+    {
+      "patient_ref": "patient:003",
+      "bed_ref": "location:bed_103_a",
+      "org_ref": "department:cardiology"
+    }
+  ],
+  "emergency": [
+    {
+      "patient_ref": "patient:001",
+      "org_ref": "department:emergency"
+    },
+    {
+      "patient_ref": "patient:001",
+      "org_ref": "department:emergency"
+    }
+  ],
+  "questionnaire_slugs": [
+    "demo-ip-vitals-form",
+    "demo-op-consultation-form"
+  ]
+}

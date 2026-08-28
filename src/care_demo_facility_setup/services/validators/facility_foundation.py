@@ -63,12 +63,19 @@ def _validate_foundation_entries(foundation: dict, accumulator: ValidationAccumu
         seen_locations: set[str] = set()
         parent_refs: set[str] = set()
         locations_by_ref: dict[str, dict] = {}
+        bed_count = 0
         for location in locations:
             if not isinstance(location, dict):
                 continue
             ref = location.get("ref")
             parent_ref = location.get("parent_ref")
-            if location.get("mode") != "kind":
+            form = location.get("form")
+            mode = location.get("mode")
+            if form == "bd":
+                bed_count += 1
+                if mode != "instance":
+                    accumulator.error(f"{ref or 'bed entry'} must use mode='instance'.")
+            elif mode != "kind":
                 accumulator.error(f"{ref or 'location entry'} must use mode='kind'.")
             if isinstance(ref, str):
                 locations_by_ref[ref] = location
@@ -80,6 +87,8 @@ def _validate_foundation_entries(foundation: dict, accumulator: ValidationAccumu
                     accumulator.error(f"{parent_ref} cannot be mode='instance' because it has children.")
             if isinstance(ref, str):
                 seen_locations.add(ref)
+        if bed_count < 3:
+            accumulator.error("facility_foundation.locations must include at least 3 beds (form='bd').")
         for parent_ref in parent_refs:
             if parent_ref in locations_by_ref and locations_by_ref[parent_ref].get("mode") == "instance":
                 accumulator.error(f"{parent_ref} cannot be mode='instance' because it has children.")

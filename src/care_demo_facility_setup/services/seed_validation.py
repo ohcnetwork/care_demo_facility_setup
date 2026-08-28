@@ -83,8 +83,6 @@ def validate_seed_request(
         if step_definition.validator is not None:
             step_definition.validator(context, accumulator)
 
-    _validate_future_milestone_resources(pack, accumulator)
-
     summary = {
         "pack_slug": manifest["slug"],
         "pack_name": manifest["name"],
@@ -134,8 +132,3 @@ def _validate_geo_organization(
     ).exists():
         accumulator.error("Profile geo_organization_external_id does not match an existing govt organization.")
     return geo_organization_external_id
-
-
-def _validate_future_milestone_resources(pack: dict, accumulator: ValidationAccumulator) -> None:
-    if not pack.get("lab_tests"):
-        accumulator.warning("The seed pack does not contain any lab tests for later milestones.")

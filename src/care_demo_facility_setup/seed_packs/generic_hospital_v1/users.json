@@ -1,0 +1,47 @@
+{
+  "password": "Ohcn@123",
+  "phone_number_template": "+91{local_number}",
+  "email_domain": "care.demo",
+  "users": [
+    {
+      "ref": "user:fac_admin",
+      "username_prefix": "demo_fac_admin",
+      "first_name": "Demo",
+      "last_name": "FacAdmin",
+      "email_local": "demo_fac_admin",
+      "gender": "female",
+      "role_name": "Facility Admin",
+      "org_ref": "department:administration"
+    },
+    {
+      "ref": "user:doctor_pediatrics",
+      "username_prefix": "demo_doctor_peds",
+      "first_name": "Demo",
+      "last_name": "Pediatrician",
+      "email_local": "demo_doctor_peds",
+      "gender": "female",
+      "role_name": "Doctor",
+      "org_ref": "department:pediatrics"
+    },
+    {
+      "ref": "user:nurse_pediatrics_1",
+      "username_prefix": "demo_nurse_peds_1",
+      "first_name": "Demo",
+      "last_name": "NurseOne",
+      "email_local": "demo_nurse_peds_1",
+      "gender": "female",
+      "role_name": "Nurse",
+      "org_ref": "department:pediatrics"
+    },
+    {
+      "ref": "user:nurse_pediatrics_2",
+      "username_prefix": "demo_nurse_peds_2",
+      "first_name": "Demo",
+      "last_name": "NurseTwo",
+      "email_local": "demo_nurse_peds_2",
+      "gender": "female",
+      "role_name": "Nurse",
+      "org_ref": "department:pediatrics"
+    }
+  ]
+}

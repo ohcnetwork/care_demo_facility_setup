@@ -3524,8 +3524,8 @@
       },
       "base_unit": {
         "system": "http://unitsofmeasure.org",
-        "code": "microgram",
-        "display": "microgram"
+        "code": "{actuation}",
+        "display": "puffs"
       },
       "definitional": {
         "dosage_form": {
@@ -3546,7 +3546,7 @@
       "status": "active",
       "extensions": {}
     },
-    "stock_quantity": 100
+    "stock_quantity": 1000
   },
   {
     "slug": "pk-bude-form",
@@ -3981,7 +3981,7 @@
     "slug": "pk-erythro",
     "resource_category_name": "Medicines",
     "product_knowledge": {
-      "name": "Darbepoetin Alfa Injection 40 µg/0.4 ml",
+      "name": "Darbepoetin Alfa Injection 40 \u00b5g/0.4 ml",
       "slug_value": "pk-erythro",
       "status": "active",
       "product_type": "medication",
@@ -5734,7 +5734,7 @@
       "status": "active",
       "extensions": {}
     },
-    "stock_quantity": 100
+    "stock_quantity": 1000
   },
   {
     "slug": "pk-silver-sulf",
@@ -9985,7 +9985,7 @@
       "status": "active",
       "extensions": {}
     },
-    "stock_quantity": 100
+    "stock_quantity": 1000
   },
   {
     "slug": "pk-cpm-syr",

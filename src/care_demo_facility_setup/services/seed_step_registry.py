@@ -8,23 +8,33 @@ from care_demo_facility_setup.services.seed_context import SeedContext, SeedResu
 from care_demo_facility_setup.services.seeders import (
     ActivityDefinitionSeeder,
     ChargeItemDefinitionSeeder,
+    ClinicalVisitSeeder,
     FacilityFoundationSeeder,
     FacilitySeeder,
     InventorySeeder,
     ObservationDefinitionSeeder,
     PatientSeeder,
+    QuestionnaireSeeder,
+    ScheduleSeeder,
     SpecimenDefinitionSeeder,
+    TokenCategorySeeder,
+    UserSeeder,
 )
 from care_demo_facility_setup.services.validators import (
     SeedStepValidator,
     validate_activity_definitions,
     validate_charge_item_definitions,
+    validate_clinical_visits,
     validate_facility,
     validate_facility_foundation,
     validate_inventory_items,
     validate_observation_definitions,
     validate_patients,
+    validate_questionnaires,
+    validate_schedules,
     validate_specimen_definitions,
+    validate_token_categories,
+    validate_users,
 )
 
 SeedStepExecutor = Callable[[SeedContext, SeedRunStep], SeedResult]
@@ -160,16 +170,85 @@ def _seed_inventory_items(context: SeedContext, step: SeedRunStep) -> SeedResult
     return SeedResult(message=message, stats=stats)
 
 
+def _seed_questionnaires(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = QuestionnaireSeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+        geo_organization=context.geo_organization,
+    ).seed(step=step, questionnaires_config=context.pack["questionnaires"])
+    return SeedResult(message=message, stats=stats)
+
+
+def _seed_clinical_visits(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = ClinicalVisitSeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+        run_id=context.run.id,
+        requester_external_id=str(context.run.requested_by.external_id),
+    ).seed(
+        step=step,
+        visits_plan=context.pack["clinical_visits"],
+        scenarios=context.pack["clinical_scenarios"],
+        facility_template=context.pack["facility"],
+        patients_config=context.pack["patients"],
+        questionnaires_config=context.pack.get("questionnaires") or {},
+    )
+    return SeedResult(message=message, stats=stats)
+
+
+def _seed_facility_users(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = UserSeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+        geo_organization=context.geo_organization,
+        run_id=context.run.id,
+    ).seed(
+        step=step,
+        users_config=context.pack["users"],
+        facility_template=context.pack["facility"],
+    )
+    return SeedResult(message=message, stats=stats)
+
+
+def _seed_schedules(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = ScheduleSeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+    ).seed(
+        step=step,
+        schedules_config=context.pack["schedules"],
+        facility_template=context.pack["facility"],
+    )
+    return SeedResult(message=message, stats=stats)
+
+
+def _seed_token_categories(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = TokenCategorySeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+    ).seed(
+        step=step,
+        token_categories_config=context.pack["token_categories"],
+        facility_template=context.pack["facility"],
+    )
+    return SeedResult(message=message, stats=stats)
+
+
 DEFAULT_STEP_KEYS = (
     "validate",
     "facility",
+    "questionnaires",
     "patients",
     "facility_foundation",
+    "facility_users",
+    "schedules",
+    "token_categories",
     "specimen_definitions",
     "observation_definitions",
     "charge_item_definitions",
     "activity_definitions",
     "inventory_items",
+    "clinical_visits",
 )
 
 AVAILABLE_SEED_STEPS = (
@@ -202,6 +281,33 @@ AVAILABLE_SEED_STEPS = (
         executor=_seed_facility_foundation,
         validator=validate_facility_foundation,
         initial_stats=_facility_foundation_initial_stats,
+    ),
+    SeedStepDefinition(
+        key="facility_users",
+        title="Create facility users",
+        resource_key="users",
+        depends_on=("facility_foundation",),
+        executor=_seed_facility_users,
+        validator=validate_users,
+        initial_stats=lambda: {"created": 0, "reused": 0},
+    ),
+    SeedStepDefinition(
+        key="schedules",
+        title="Create practitioner schedules",
+        resource_key="schedules",
+        depends_on=("facility_users",),
+        executor=_seed_schedules,
+        validator=validate_schedules,
+        initial_stats=lambda: {"created": 0, "reused": 0},
+    ),
+    SeedStepDefinition(
+        key="token_categories",
+        title="Create token categories",
+        resource_key="token_categories",
+        depends_on=("facility",),
+        executor=_seed_token_categories,
+        validator=validate_token_categories,
+        initial_stats=lambda: {"created": 0, "reused": 0},
     ),
     SeedStepDefinition(
         key="specimen_definitions",
@@ -257,6 +363,30 @@ AVAILABLE_SEED_STEPS = (
             "categories_created": 0,
             "products_received": 0,
             "transferred": 0,
+        },
+    ),
+    SeedStepDefinition(
+        key="questionnaires",
+        title="Ensure demo questionnaires",
+        resource_key="questionnaires",
+        depends_on=("facility",),
+        executor=_seed_questionnaires,
+        validator=validate_questionnaires,
+        initial_stats=lambda: {"created": 0, "reused": 0},
+    ),
+    SeedStepDefinition(
+        key="clinical_visits",
+        title="Create clinical visits",
+        resource_key="clinical_visits",
+        depends_on=("patients", "facility_foundation", "questionnaires", "inventory_items"),
+        executor=_seed_clinical_visits,
+        validator=validate_clinical_visits,
+        initial_stats=lambda: {
+            "created": 0,
+            "op_closed": 0,
+            "ip_in_progress": 0,
+            "emergency": 0,
+            "beds_assigned": 0,
         },
     ),
 )

@@ -1446,7 +1446,7 @@
     "productType": "medication",
     "codeDisplay": "Product containing precisely levosalbutamol (as levosalbutamol sulfate) 50 microgram/1 actuation conventional release pressurized solution for inhalation (clinical drug",
     "codeValue": "1231792009",
-    "baseUnitDisplay": "microgram",
+    "baseUnitDisplay": "puffs",
     "dosageFormDisplay": "solution for inhalation",
     "dosageFormCode": "420641004",
     "routeCode": "260617000",
@@ -1634,7 +1634,7 @@
   {
     "resourceCategory": "Medicines",
     "slug": "pk-erythro",
-    "name": "Darbepoetin Alfa Injection 40 µg/0.4 ml",
+    "name": "Darbepoetin Alfa Injection 40 \u00b5g/0.4 ml",
     "productType": "medication",
     "codeDisplay": "Product containing precisely darbepoetin alfa 100 microgram/1 milliliter conventional release solution for injection (clinical drug)",
     "codeValue": "1153501009",

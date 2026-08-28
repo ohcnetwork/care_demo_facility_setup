@@ -146,6 +146,13 @@
       "mode": "kind"
     },
     {
+      "ref": "location:bed_101_a",
+      "name": "101-A",
+      "parent_ref": "location:ip_room_101",
+      "form": "bd",
+      "mode": "instance"
+    },
+    {
       "ref": "location:ip_room_102",
       "name": "102",
       "parent_ref": "location:ip_rooms",
@@ -153,11 +160,25 @@
       "mode": "kind"
     },
     {
+      "ref": "location:bed_102_a",
+      "name": "102-A",
+      "parent_ref": "location:ip_room_102",
+      "form": "bd",
+      "mode": "instance"
+    },
+    {
       "ref": "location:ip_room_103",
       "name": "103",
       "parent_ref": "location:ip_rooms",
       "form": "ro",
       "mode": "kind"
+    },
+    {
+      "ref": "location:bed_103_a",
+      "name": "103-A",
+      "parent_ref": "location:ip_room_103",
+      "form": "bd",
+      "mode": "instance"
     },
     {
       "ref": "location:ip_room_104",

@@ -347,23 +347,6 @@ def build_seed_pack() -> None:
 
     location_refs_by_name, service_refs_by_name = load_foundation_refs()
 
-    lab_tests = []
-    for row in rows["activities"]:
-        activity = activity_payload(row, location_refs_by_name, service_refs_by_name)
-        inferred_charge = f"charge-{slug_key(row['slug_value'])}"
-        charge_refs = activity.get("charge_item_definition_refs") or [inferred_charge]
-        lab_tests.append(
-            {
-                "slug": row["slug_value"],
-                "specimens": [specimens[slug] for slug in activity.get("specimen_refs", []) if slug in specimens],
-                "observations": [
-                    observations[slug] for slug in activity.get("observation_refs", []) if slug in observations
-                ],
-                "charge_item_definitions": [charges[slug] for slug in charge_refs if slug in charges],
-                "activity": activity,
-            }
-        )
-
     activity_definitions = []
     for row in rows["activities"]:
         activity = activity_payload(row, location_refs_by_name, service_refs_by_name)
@@ -404,13 +387,11 @@ def build_seed_pack() -> None:
                 "charge_item_categories": "charge_item_categories.json",
                 "activity_definitions": "activity_definitions.json",
                 "activity_categories": "activity_categories.json",
-                "lab_tests": "lab_tests.json",
                 "inventory_items": "inventory_items.json",
             },
             "profiles_dir": "profiles",
             "source_csvs": CSV_FILES,
             "counts": {
-                "lab_tests": len(lab_tests),
                 "inventory_items": len(inventory_items),
                 "specimens": len(specimens),
                 "observations": len(observations),
@@ -426,7 +407,6 @@ def build_seed_pack() -> None:
         "charge_item_categories.json": charge_item_categories,
         "activity_definitions.json": activity_definitions,
         "activity_categories.json": activity_categories,
-        "lab_tests.json": lab_tests,
         "inventory_items.json": inventory_items,
     }
 

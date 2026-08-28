@@ -1,0 +1,27 @@
+{
+  "forms": [
+    {
+      "slug": "demo-ip-vitals-form",
+      "fill_key": "vitals",
+      "requirements": [
+        {"key": "temperature", "loinc": "8310-5"},
+        {"key": "pulse", "loinc": "8867-4"},
+        {"key": "respiratory", "loinc": "9279-1"},
+        {"key": "spo2", "loinc": "2708-6"},
+        {"key": "systolic", "loinc": "8480-6"},
+        {"key": "diastolic", "loinc": "8462-4"},
+        {"key": "grbs", "loinc": "2339-0"}
+      ]
+    },
+    {
+      "slug": "demo-op-consultation-form",
+      "fill_key": "op_consultation",
+      "requirements": [
+        {"key": "history", "loinc": "10164-2"},
+        {"key": "ongoing_med", "loinc": "52418-1"},
+        {"key": "admission", "link_id": "Q-1772121553415"},
+        {"key": "advice", "link_id": "Q-1773050912070"}
+      ]
+    }
+  ]
+}

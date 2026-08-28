@@ -1,0 +1,191 @@
+[
+  {
+    "name": "Acute Upper Respiratory Infection",
+    "history_text": "Fever for 3 days with cough and sore throat",
+    "exam_note": "Throat congested, mild tonsillar enlargement, no lymphadenopathy",
+    "advice": "Adequate rest, oral hydration, warm fluids, avoid cold foods",
+    "review_days": 5,
+    "vitals": {
+      "temp_min": 100, "temp_max": 103,
+      "pulse_min": 88, "pulse_max": 105,
+      "resp_min": 18, "resp_max": 22,
+      "spo2_min": 95, "spo2_max": 98,
+      "sys_bp_min": 110, "sys_bp_max": 130,
+      "dia_bp_min": 70, "dia_bp_max": 85
+    },
+    "symptoms": [
+      { "code": "386661006", "display": "Fever", "severity": "moderate" },
+      { "code": "49727002", "display": "Cough", "severity": "mild" },
+      { "code": "267102003", "display": "Sore throat", "severity": "mild" }
+    ],
+    "diagnosis": [
+      { "code": "54398005", "display": "Acute upper respiratory infection", "severity": "moderate" }
+    ],
+    "medication": {
+      "product_knowledge_slug": "pk-azith-250",
+      "display": "Paracetamol 500 mg Tablet",
+      "dose_value": "1",
+      "dose_unit_code": "{tbl}",
+      "dose_unit_display": "tablets",
+      "frequency": 3,
+      "period": "1",
+      "period_unit": "d",
+      "duration_value": "5",
+      "duration_unit": "d",
+      "timing_code": "TID",
+      "timing_display": "Three times a day",
+      "text": "1-1-1"
+    }
+  },
+  {
+    "name": "Essential Hypertension",
+    "history_text": "Headache and dizziness for 2 days, known case of hypertension",
+    "exam_note": "BP elevated, no focal neurological deficits, pedal edema absent",
+    "advice": "Low sodium diet, regular exercise, avoid stress, monitor BP daily",
+    "review_days": 30,
+    "vitals": {
+      "temp_min": 98, "temp_max": 99,
+      "pulse_min": 88, "pulse_max": 100,
+      "resp_min": 16, "resp_max": 18,
+      "spo2_min": 96, "spo2_max": 99,
+      "sys_bp_min": 155, "sys_bp_max": 180,
+      "dia_bp_min": 100, "dia_bp_max": 115
+    },
+    "symptoms": [
+      { "code": "25064002", "display": "Headache", "severity": "moderate" },
+      { "code": "404640003", "display": "Dizziness", "severity": "mild" }
+    ],
+    "diagnosis": [
+      { "code": "59621000", "display": "Essential hypertension", "severity": "moderate" }
+    ],
+    "medication": {
+      "product_knowledge_slug": "pk-amlo-5-3",
+      "display": "Amlodipine 5 mg Tablet (as amlodipine besilate)",
+      "dose_value": "1",
+      "dose_unit_code": "{tbl}",
+      "dose_unit_display": "tablets",
+      "frequency": 1,
+      "period": "1",
+      "period_unit": "d",
+      "duration_value": "30",
+      "duration_unit": "d",
+      "timing_code": "QD",
+      "timing_display": "Every day",
+      "text": "1-0-0"
+    }
+  },
+  {
+    "name": "Type 2 Diabetes Mellitus",
+    "history_text": "Fatigue, excessive thirst and increased urination for 1 week",
+    "exam_note": "No acute distress, dry mucous membranes, no neuropathic changes",
+    "advice": "Low sugar diet, regular exercise, monitor blood glucose levels daily",
+    "review_days": 14,
+    "vitals": {
+      "temp_min": 98, "temp_max": 99,
+      "pulse_min": 78, "pulse_max": 88,
+      "resp_min": 16, "resp_max": 18,
+      "spo2_min": 97, "spo2_max": 99,
+      "sys_bp_min": 120, "sys_bp_max": 140,
+      "dia_bp_min": 80, "dia_bp_max": 90
+    },
+    "symptoms": [
+      { "code": "84229001", "display": "Fatigue", "severity": "moderate" },
+      { "code": "17173007", "display": "Excessive thirst", "severity": "mild" },
+      { "code": "28442001", "display": "Polyuria", "severity": "mild" }
+    ],
+    "diagnosis": [
+      { "code": "44054006", "display": "Type 2 diabetes mellitus", "severity": "moderate" }
+    ],
+    "medication": {
+      "product_knowledge_slug": "pk-glime-2",
+      "display": "Metformin 500 mg Tablet",
+      "dose_value": "1",
+      "dose_unit_code": "{tbl}",
+      "dose_unit_display": "tablets",
+      "frequency": 2,
+      "period": "1",
+      "period_unit": "d",
+      "duration_value": "30",
+      "duration_unit": "d",
+      "timing_code": "BID",
+      "timing_display": "Two times a day",
+      "text": "1-0-1"
+    }
+  },
+  {
+    "name": "Bronchial Asthma",
+    "history_text": "Breathlessness and wheezing for 1 day with productive cough",
+    "exam_note": "Bilateral wheezing on auscultation, use of accessory muscles noted",
+    "advice": "Avoid triggers, use inhaler as directed, follow up if symptoms worsen",
+    "review_days": 7,
+    "vitals": {
+      "temp_min": 98, "temp_max": 100,
+      "pulse_min": 95, "pulse_max": 115,
+      "resp_min": 22, "resp_max": 28,
+      "spo2_min": 89, "spo2_max": 94,
+      "sys_bp_min": 115, "sys_bp_max": 130,
+      "dia_bp_min": 75, "dia_bp_max": 85
+    },
+    "symptoms": [
+      { "code": "267036007", "display": "Dyspnoea", "severity": "severe" },
+      { "code": "56018004", "display": "Wheezing", "severity": "moderate" },
+      { "code": "28743005", "display": "Productive cough", "severity": "mild" }
+    ],
+    "diagnosis": [
+      { "code": "195967001", "display": "Asthma", "severity": "moderate" }
+    ],
+    "medication": {
+      "product_knowledge_slug": "pk-levo-inh",
+      "display": "Levosalbutamol Inhaler 50 mcg",
+      "dose_value": "2",
+      "dose_unit_code": "{actuation}",
+      "dose_unit_display": "puffs",
+      "frequency": 3,
+      "period": "1",
+      "period_unit": "d",
+      "duration_value": "5",
+      "duration_unit": "d",
+      "timing_code": "TID",
+      "timing_display": "Three times a day",
+      "text": "2 puffs TID"
+    }
+  },
+  {
+    "name": "Anaemia",
+    "history_text": "Fatigue and breathlessness on exertion for 2 weeks, pale appearance",
+    "exam_note": "Pallor noted in conjunctiva, tachycardia, systolic murmur grade II/VI",
+    "advice": "Iron-rich diet including leafy vegetables, red meat, avoid tea with meals",
+    "review_days": 30,
+    "vitals": {
+      "temp_min": 98, "temp_max": 99,
+      "pulse_min": 95, "pulse_max": 110,
+      "resp_min": 20, "resp_max": 24,
+      "spo2_min": 93, "spo2_max": 96,
+      "sys_bp_min": 100, "sys_bp_max": 115,
+      "dia_bp_min": 65, "dia_bp_max": 78
+    },
+    "symptoms": [
+      { "code": "84229001", "display": "Fatigue", "severity": "moderate" },
+      { "code": "398979000", "display": "Pale complexion", "severity": "mild" },
+      { "code": "60845006", "display": "Dyspnoea on exertion", "severity": "mild" }
+    ],
+    "diagnosis": [
+      { "code": "271737000", "display": "Anaemia", "severity": "moderate" }
+    ],
+    "medication": {
+      "product_knowledge_slug": "pk-iron-folic",
+      "display": "Ferrous Sulphate + Folic Acid Tablet (Sugar Coated) 60 mg + 0.5 mg",
+      "dose_value": "1",
+      "dose_unit_code": "{tbl}",
+      "dose_unit_display": "tablets",
+      "frequency": 2,
+      "period": "1",
+      "period_unit": "d",
+      "duration_value": "30",
+      "duration_unit": "d",
+      "timing_code": "BID",
+      "timing_display": "Two times a day",
+      "text": "1-0-1"
+    }
+  }
+]
