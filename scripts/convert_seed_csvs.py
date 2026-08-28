@@ -117,8 +117,7 @@ def resolve_service_ref(name: str, service_refs_by_name: dict[str, str]) -> str 
     ref = service_refs_by_name.get(name)
     if not ref:
         raise ValueError(
-            f"Activity references healthcare service '{name}', "
-            "which has no matching ref in facility_foundation.json."
+            f"Activity references healthcare service '{name}', which has no matching ref in facility_foundation.json."
         )
     return ref
 
@@ -374,13 +373,17 @@ def build_seed_pack() -> None:
         activity["charge_item_definition_refs"] = [ref for ref in charge_refs if ref in charges]
         activity_definitions.append(activity)
 
+    # Catalogue + required stock_quantity. Optional receive inputs (pack_size,
+    # mrp_per_pack, purchase_price / purchase_per_pack, unit_price, lot_prefix,
+    # expiration_date) may be added per row; the seeder fills missing ones.
+    # Do not store CARE CID objects (price_components, tax codes) here.
     inventory_items = [
         {
             "slug": row["slug"],
             "resource_category_name": row["resourceCategory"] or "Medicines",
             "product_knowledge": product_knowledge_payload(row),
             "product_extras": {"status": "active", "extensions": {}},
-            "stock_quantity": 0,
+            "stock_quantity": 100,
         }
         for row in rows["product_knowledge"]
     ]

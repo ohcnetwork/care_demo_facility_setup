@@ -10,6 +10,7 @@ from care_demo_facility_setup.services.seeders import (
     ChargeItemDefinitionSeeder,
     FacilityFoundationSeeder,
     FacilitySeeder,
+    InventorySeeder,
     ObservationDefinitionSeeder,
     PatientSeeder,
     SpecimenDefinitionSeeder,
@@ -20,6 +21,7 @@ from care_demo_facility_setup.services.validators import (
     validate_charge_item_definitions,
     validate_facility,
     validate_facility_foundation,
+    validate_inventory_items,
     validate_observation_definitions,
     validate_patients,
     validate_specimen_definitions,
@@ -145,6 +147,19 @@ def _seed_activity_definitions(context: SeedContext, step: SeedRunStep) -> SeedR
     return SeedResult(message=message, stats=stats)
 
 
+def _seed_inventory_items(context: SeedContext, step: SeedRunStep) -> SeedResult:
+    message, stats = InventorySeeder(
+        client=context.client,
+        artifacts=context.artifacts,
+        run_id=context.run.id,
+    ).seed(
+        step=step,
+        items_config=context.pack["inventory_items"],
+        facility_template=context.pack["facility"],
+    )
+    return SeedResult(message=message, stats=stats)
+
+
 DEFAULT_STEP_KEYS = (
     "validate",
     "facility",
@@ -154,6 +169,7 @@ DEFAULT_STEP_KEYS = (
     "observation_definitions",
     "charge_item_definitions",
     "activity_definitions",
+    "inventory_items",
 )
 
 AVAILABLE_SEED_STEPS = (
@@ -228,6 +244,20 @@ AVAILABLE_SEED_STEPS = (
         executor=_seed_activity_definitions,
         validator=validate_activity_definitions,
         initial_stats=lambda: {"created": 0, "categories_created": 0},
+    ),
+    SeedStepDefinition(
+        key="inventory_items",
+        title="Create inventory items",
+        resource_key="inventory_items",
+        depends_on=("facility_foundation",),
+        executor=_seed_inventory_items,
+        validator=validate_inventory_items,
+        initial_stats=lambda: {
+            "created": 0,
+            "categories_created": 0,
+            "products_received": 0,
+            "transferred": 0,
+        },
     ),
 )
 

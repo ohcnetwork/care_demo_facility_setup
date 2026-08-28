@@ -36,6 +36,7 @@
     "charge_item_definitions": 33,
     "charge_item_categories": 3,
     "activity_definitions": 33,
-    "activity_categories": 1
+    "activity_categories": 1,
+    "inventory_items": 318
   }
 }

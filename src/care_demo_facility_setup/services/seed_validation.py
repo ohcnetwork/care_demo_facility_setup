@@ -139,5 +139,3 @@ def _validate_geo_organization(
 def _validate_future_milestone_resources(pack: dict, accumulator: ValidationAccumulator) -> None:
     if not pack.get("lab_tests"):
         accumulator.warning("The seed pack does not contain any lab tests for later milestones.")
-    if not pack.get("inventory_items"):
-        accumulator.warning("The seed pack does not contain any inventory items for later milestones.")

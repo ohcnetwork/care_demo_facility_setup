@@ -93,6 +93,39 @@ class CareSeedClient:
     def create_activity_definition(self, facility_id: str, payload: dict):
         return self.base.create_activity_definition(facility_id, **payload)
 
+    def create_organization(self, payload: dict):
+        return self.base.create_organization(**payload)
+
+    def create_product_knowledge(self, payload: dict):
+        return self.base.create_product_knowledge(**payload)
+
+    def create_product(self, facility_id: str, payload: dict):
+        return self.base.create_product(facility_id, **payload)
+
+    def create_request_order(self, facility_id: str, payload: dict):
+        return self.base.create_request_order(facility_id, **payload)
+
+    def update_request_order(self, facility_id: str, order_id: str, payload: dict):
+        return self.base.update_request_order(facility_id, order_id, **payload)
+
+    def create_supply_request(self, payload: dict):
+        return self.base.create_supply_request(**payload)
+
+    def create_delivery_order(self, facility_id: str, payload: dict):
+        return self.base.create_delivery_order(facility_id, **payload)
+
+    def update_delivery_order(self, facility_id: str, order_id: str, payload: dict):
+        return self.base.update_delivery_order(facility_id, order_id, **payload)
+
+    def create_supply_delivery(self, payload: dict):
+        return self.base.create_supply_delivery(**payload)
+
+    def update_supply_delivery(self, delivery_id: str, payload: dict):
+        return self.base.update_supply_delivery(delivery_id, **payload)
+
+    def list_inventory_items(self, facility_id: str, location_id: str, **params):
+        return self.base.list_inventory_items(facility_id, location_id, **params)
+
 
 def _with_trailing_slash(path):
     path = str(path)
