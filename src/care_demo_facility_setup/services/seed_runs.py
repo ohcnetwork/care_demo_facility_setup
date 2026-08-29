@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+from care.emr.models.organization import Organization
+from care.facility.models import Facility
 from django.db import transaction
 from django.utils import timezone
 
 from care_demo_facility_setup.models import (
     SeedRun,
+    SeedRunArtifact,
     SeedRunStatus,
     SeedRunStep,
     SeedRunStepStatus,
 )
-from care_demo_facility_setup.services.seed_packs import SeedPackError, load_seed_pack
+from care_demo_facility_setup.services.seed_errors import SeedRunExecutionError
+from care_demo_facility_setup.services.seed_packs import (
+    DEFAULT_PACK_SLUG,
+    SeedPackError,
+    load_profile,
+    load_seed_pack,
+)
 from care_demo_facility_setup.services.seed_step_registry import SeedStepRegistryError, get_seed_step_definitions
 from care_demo_facility_setup.services.seed_validation import validate_seed_request
 
@@ -143,3 +152,121 @@ def enqueue_seed_run(run_external_id: str):
             error=f"Could not enqueue seed run: {exc}",
             finished_date=timezone.now(),
         )
+
+
+@transaction.atomic
+def create_attached_seed_run(
+    *,
+    facility_external_id: str,
+    geo_organization_external_id: str,
+    requested_by,
+    pack_slug: str = DEFAULT_PACK_SLUG,
+    profile_slug: str = "local",
+) -> SeedRun:
+    """Create a SeedRun that attaches pack content to an existing facility.
+
+    Skips host/profile geo validation: the caller supplies geo and facility ids.
+    Pre-stores ``facility:main`` and marks the facility step succeeded so
+    FacilitySeeder is never called. Standalone ``create_seed_run`` is unchanged.
+    """
+    try:
+        pack = load_seed_pack(pack_slug)
+        profile = load_profile(pack_slug, profile_slug)
+    except SeedPackError as exc:
+        raise SeedRunExecutionError(str(exc)) from exc
+
+    if not Organization.objects.filter(
+        external_id=geo_organization_external_id,
+        org_type="govt",
+    ).exists():
+        raise SeedRunExecutionError("geo_organization_external_id does not match an existing govt organization.")
+
+    try:
+        facility = Facility.objects.get(external_id=facility_external_id)
+    except Facility.DoesNotExist as exc:
+        raise SeedRunExecutionError(f"Facility {facility_external_id} does not exist.") from exc
+
+    facility_ref = pack.get("facility", {}).get("ref", "facility:main")
+    manifest = pack["manifest"]
+    now = timezone.now()
+    request_payload = {
+        "pack_slug": pack_slug,
+        "profile_slug": profile_slug,
+        "dry_run": False,
+        "attach_existing_facility": True,
+        "facility_external_id": str(facility_external_id),
+        "geo_organization_external_id": str(geo_organization_external_id),
+    }
+    summary = {
+        "pack_slug": manifest["slug"],
+        "pack_name": manifest["name"],
+        "pack_version": manifest["version"],
+        "profile_slug": profile["slug"],
+        "profile_name": profile["name"],
+        "counts": manifest.get("counts", {}),
+        "geo_organization_external_id": str(geo_organization_external_id),
+        "facility_external_id": str(facility_external_id),
+        "attach_existing_facility": True,
+        "resource_categories": profile.get("resource_categories", {}),
+    }
+
+    run = SeedRun.objects.create(
+        pack_slug=pack_slug,
+        profile_slug=profile_slug,
+        dry_run=False,
+        requested_by=requested_by,
+        request_payload=request_payload,
+        summary=summary,
+        status=SeedRunStatus.QUEUED,
+        error="",
+    )
+
+    facility_step = None
+    for index, step_definition in enumerate(_planned_steps_for_pack(pack_slug), start=1):
+        if step_definition.key == "validate":
+            status = SeedRunStepStatus.SUCCEEDED
+            message = "Attach-mode validation passed (geo and facility injected)."
+            started = now
+            finished = now
+            stats = summary.get("counts", {})
+        elif step_definition.key == "facility":
+            status = SeedRunStepStatus.SUCCEEDED
+            message = f"Attached existing facility {facility.name}"
+            started = now
+            finished = now
+            stats = {"created": 0, "attached": 1}
+        else:
+            status = SeedRunStepStatus.PENDING
+            message = ""
+            started = None
+            finished = None
+            stats = {}
+
+        step = SeedRunStep.objects.create(
+            run=run,
+            order=index,
+            key=step_definition.key,
+            title=step_definition.title,
+            status=status,
+            message=message,
+            stats=stats,
+            started_date=started,
+            finished_date=finished,
+        )
+        if step_definition.key == "facility":
+            facility_step = step
+
+    SeedRunArtifact.objects.create(
+        run=run,
+        step=facility_step,
+        ref=facility_ref,
+        resource_type="Facility",
+        resource_external_id=facility.external_id,
+        slug=getattr(facility, "slug", "") or "",
+        payload={
+            "id": str(facility.external_id),
+            "name": facility.name,
+            "attached": True,
+        },
+    )
+    return run

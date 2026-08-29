@@ -24,14 +24,24 @@ class DemoSeedRunner:
         self.run = run
         self.pack = load_seed_pack(run.pack_slug)
         profile = load_profile(run.pack_slug, run.profile_slug)
+        geo_organization = self._resolve_geo_organization(run, profile)
         self.context = SeedContext(
             client=CareSeedClient(run.requested_by),
             artifacts=SeedArtifactStore(run),
-            geo_organization=profile["geo_organization_external_id"],
+            geo_organization=geo_organization,
             run=run,
             pack=self.pack,
             profile=profile,
         )
+
+    @staticmethod
+    def _resolve_geo_organization(run: SeedRun, profile: dict) -> str:
+        """Prefer caller-injected geo (attach/sandbox); fall back to profile."""
+        payload = run.request_payload or {}
+        geo = payload.get("geo_organization_external_id") or profile.get("geo_organization_external_id")
+        if not geo:
+            raise SeedRunExecutionError("No geo_organization_external_id on the seed run or profile.")
+        return str(geo)
 
     def execute(self):
         if self.run.status in {
@@ -48,6 +58,13 @@ class DemoSeedRunner:
         self._mark_run(SeedRunStatus.RUNNING, started=True)
         try:
             for step_definition in get_executable_seed_step_definitions(self.pack["manifest"]):
+                step = self._get_step(step_definition.key)
+                # Attach mode (and any pre-completed step) must not re-run.
+                if step.status in {
+                    SeedRunStepStatus.SUCCEEDED,
+                    SeedRunStepStatus.SKIPPED,
+                }:
+                    continue
                 self._execute_seed_step(step_definition)
         except Exception as exc:
             self._mark_pending_steps_skipped("Skipped because an earlier step failed.")
