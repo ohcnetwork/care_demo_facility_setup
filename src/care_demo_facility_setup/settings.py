@@ -67,9 +67,7 @@ class PluginSettings:  # pragma: no cover
     @property
     def user_settings(self) -> dict:
         if not hasattr(self, "_user_settings"):
-            self._user_settings = getattr(settings, "PLUGIN_CONFIGS", {}).get(
-                self.plugin_name, {}
-            )
+            self._user_settings = getattr(settings, "PLUGIN_CONFIGS", {}).get(self.plugin_name, {})
         return self._user_settings
 
     def validate(self) -> None:
@@ -97,17 +95,13 @@ class PluginSettings:  # pragma: no cover
             delattr(self, "_user_settings")
 
 
-REQUIRED_SETTINGS = {
-    "CARE_DEMO_FACILITY_SETUP_CONFIG",
-}
+REQUIRED_SETTINGS = set()
 
 DEFAULTS = {
     "CARE_DEMO_FACILITY_SETUP_OPTIONAL_CONFIG": "test",
 }
 
-plugin_settings = PluginSettings(
-    PLUGIN_NAME, defaults=DEFAULTS, required_settings=REQUIRED_SETTINGS
-)
+plugin_settings = PluginSettings(PLUGIN_NAME, defaults=DEFAULTS, required_settings=REQUIRED_SETTINGS)
 
 
 @receiver(setting_changed)

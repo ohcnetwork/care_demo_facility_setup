@@ -46,3 +46,10 @@ select = [
 
 [tool.uv]
 package = true
+
+[tool.setuptools.package-data]
+care_demo_facility_setup = [
+  "data/*.csv",
+  "data/*.json",
+  "seed_packs/**/*.json",
+]

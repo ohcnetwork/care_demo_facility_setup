@@ -1,0 +1,398 @@
+[
+  {
+    "title": "Hemoglobin (hb)",
+    "slug_value": "charge-hb",
+    "description": "This test is used to measure hemoglobin concentration to evaluate anemia and oxygen transport.",
+    "purpose": "Charge for Hemoglobin",
+    "price_components": [
+      {
+        "amount": 10.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Aspartate Aminotransferase (SGOT)",
+    "slug_value": "charge-sgot",
+    "description": "This test is used to measure AST enzyme levels to assess liver and muscle injury.",
+    "purpose": "Charge for Aspartate Aminotransferase (AST)",
+    "price_components": [
+      {
+        "amount": 50.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Alanine Aminotransferase (SGPT)",
+    "slug_value": "charge-sgpt",
+    "description": "This test is used to measure ALT enzyme levels to assess liver cell injury.",
+    "purpose": "Charge for Alanine Aminotransferase (ALT)",
+    "price_components": [
+      {
+        "amount": 50.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Total Bilirubin",
+    "slug_value": "charge-tbil",
+    "description": "This test is used to measure total bilirubin to assess liver function and hemolysis.",
+    "purpose": "Charge for Total Bilirubin",
+    "price_components": [
+      {
+        "amount": 30.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Direct Bilirubin",
+    "slug_value": "charge-dbil",
+    "description": "This test is used to measure conjugated bilirubin to evaluate hepatic excretory function.",
+    "purpose": "Charge for Direct Bilirubin",
+    "price_components": [
+      {
+        "amount": 30.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Alkaline Phosphatase (ALP)",
+    "slug_value": "charge-alp",
+    "description": "This test is used to measure ALP levels to assess biliary obstruction or bone disorders.",
+    "purpose": "Charge for Alkaline Phosphatase (ALP)",
+    "price_components": [
+      {
+        "amount": 15.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Total Protein",
+    "slug_value": "charge-tprot",
+    "description": "This test is used to measure total protein levels to assess nutritional and liver status.",
+    "purpose": "Charge for Total Protein",
+    "price_components": [
+      {
+        "amount": 30.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Triglycerides",
+    "slug_value": "charge-trig",
+    "description": "This test is used to measure triglyceride levels to assess metabolic and cardiovascular risk.",
+    "purpose": "Charge for Triglycerides",
+    "price_components": [
+      {
+        "amount": 50.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Total Cholesterol",
+    "slug_value": "charge-tchol",
+    "description": "This test is used to measure total cholesterol to assess cardiovascular risk.",
+    "purpose": "Charge for Total Cholesterol",
+    "price_components": [
+      {
+        "amount": 50.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "HDL Cholesterol",
+    "slug_value": "charge-hdl",
+    "description": "This test is used to measure HDL levels to evaluate protective cholesterol.",
+    "purpose": "Charge for HDL Cholesterol",
+    "price_components": [
+      {
+        "amount": 50.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "LDL Cholesterol",
+    "slug_value": "charge-ldl",
+    "description": "This test is used to measure LDL levels to assess atherosclerotic risk.",
+    "purpose": "Charge for LDL Cholesterol",
+    "price_components": [
+      {
+        "amount": 50.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Urea",
+    "slug_value": "charge-urea",
+    "description": "This test is used to measure creatinine levels to evaluate kidney function.",
+    "purpose": "Charge for Urea",
+    "price_components": [
+      {
+        "amount": 50.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Serum Creatinine",
+    "slug_value": "charge-creat",
+    "description": "This test is used to measure uric acid levels to assess gout and metabolic disorders.",
+    "purpose": "Charge for Serum Creatinine",
+    "price_components": [
+      {
+        "amount": 25.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Uric Acid",
+    "slug_value": "charge-uric",
+    "description": "This test is used to measure sodium levels to assess fluid and electrolyte balance.",
+    "purpose": "Charge for Uric Acid",
+    "price_components": [
+      {
+        "amount": 50.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Serum Sodium",
+    "slug_value": "charge-sod",
+    "description": "This test is used to measure potassium levels to assess cardiac and neuromuscular function.",
+    "purpose": "Charge for Serum Sodium",
+    "price_components": [
+      {
+        "amount": 30.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Serum Potassium",
+    "slug_value": "charge-pot",
+    "description": "This test is used to measure calcium levels to assess bone and metabolic function.",
+    "purpose": "Charge for Serum Potassium",
+    "price_components": [
+      {
+        "amount": 15.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Serum Calcium",
+    "slug_value": "charge-cal",
+    "description": "This test is used to measure fasting blood glucose to screen for diabetes.",
+    "purpose": "Charge for Serum Calcium",
+    "price_components": [
+      {
+        "amount": 30.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Fasting Blood Glucose (FBG)",
+    "slug_value": "charge-fbg",
+    "description": "This test is used to measure postprandial glucose to assess glucose tolerance.",
+    "purpose": "Charge for Fasting Blood Glucose (FBG)",
+    "price_components": [
+      {
+        "amount": 20.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Postprandial Blood Glucose (PPBG)",
+    "slug_value": "charge-ppbg",
+    "description": "This test is used to measure random blood glucose to assess glycemic status.",
+    "purpose": "Charge for Postprandial Blood Glucose (PPBG)",
+    "price_components": [
+      {
+        "amount": 20.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Random Blood Glucose (RBS)",
+    "slug_value": "charge-rbs",
+    "description": "This test is used to measure bleeding time to assess platelet function.",
+    "purpose": "Charge for Random Blood Glucose (RBS)",
+    "price_components": [
+      {
+        "amount": 20.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Bleeding Time",
+    "slug_value": "charge-btime",
+    "description": "This test is used to measure clotting time to assess coagulation pathways.",
+    "purpose": "Charge for Bleeding Time",
+    "price_components": [
+      {
+        "amount": 10.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Clotting Time",
+    "slug_value": "charge-ctime",
+    "description": "This test is used to determine blood group based on A and B antigens.",
+    "purpose": "Charge for Clotting Time",
+    "price_components": [
+      {
+        "amount": 10.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Blood Group",
+    "slug_value": "charge-bgrp",
+    "description": "This test is used to determine Rh factor status.",
+    "purpose": "Charge for Blood Group",
+    "price_components": [
+      {
+        "amount": 15.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "HIV test (Antibodies 1 and 2)",
+    "slug_value": "charge-hiv",
+    "description": "This test is used to detect hepatitis B surface antigen indicating active infection.",
+    "purpose": "Charge for HIV test (Antibodies 1 and 2)",
+    "price_components": [
+      {
+        "amount": 0.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Hepatitis B Surface Antigen (HBsAg)",
+    "slug_value": "charge-hbsag",
+    "description": "This test is used to detect hepatitis C infection.",
+    "purpose": "Charge for Hepatitis B Surface Antigen (HBsAg)",
+    "price_components": [
+      {
+        "amount": 10.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Hepatitis C Virus Antibody (HCV)",
+    "slug_value": "charge-hcv",
+    "description": "This test is used to screen for syphilis infection.",
+    "purpose": "Charge for Hepatitis C Virus Antibody (HCV)",
+    "price_components": [
+      {
+        "amount": 100.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "RPR/VDRL test for Syphilis",
+    "slug_value": "charge-vdrl",
+    "description": "This test is used to calculate the cholesterol ratio to assess cardiovascular risk.",
+    "purpose": "Charge for RPR/VDRL test for Syphilis",
+    "price_components": [
+      {
+        "amount": 20.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Malaria Parasite Test (MP)",
+    "slug_value": "charge-mp",
+    "description": "This test is used to detect malaria parasites in blood.",
+    "purpose": "Charge for Malaria Parasite Test (MP)",
+    "price_components": [
+      {
+        "amount": 0.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Widal",
+    "slug_value": "charge-widal",
+    "description": "This test is used to detect O antibodies against Salmonella typhi.",
+    "purpose": "Charge for Widal",
+    "price_components": [
+      {
+        "amount": 20.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "complete blood count (CBC)",
+    "slug_value": "charge-cbc",
+    "description": "Blood test measuring RBC, WBC, hemoglobin, hematocrit, and platelets",
+    "purpose": "Charge for complete blood count (CBC)",
+    "price_components": [
+      {
+        "amount": 0.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Liver function test (LFT)",
+    "slug_value": "charge-lft",
+    "description": "Blood test measuring liver enzymes, bilirubin, and proteins to assess liver function",
+    "purpose": "Charge for liver function test",
+    "price_components": [
+      {
+        "amount": 100.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Lipid profile test (LPT)",
+    "slug_value": "charge-lpt",
+    "description": "Blood test measuring cholesterol and triglyceride levels",
+    "purpose": "Charge for lipid profile test",
+    "price_components": [
+      {
+        "amount": 150.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  },
+  {
+    "title": "Kidney Function Test (KFT)",
+    "slug_value": "charge-kft",
+    "description": "Blood test measuring kidney function markers such as urea, creatinine, and electrolytes",
+    "purpose": "Charge for kidney function test",
+    "price_components": [
+      {
+        "amount": 100.0,
+        "monetary_component_type": "base"
+      }
+    ]
+  }
+]

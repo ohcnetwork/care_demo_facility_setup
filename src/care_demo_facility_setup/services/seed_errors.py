@@ -1,0 +1,2 @@
+class SeedRunExecutionError(RuntimeError):
+    pass

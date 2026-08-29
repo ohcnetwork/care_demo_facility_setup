@@ -1,0 +1,14 @@
+{
+  "slug": "local",
+  "name": "Local Development",
+  "description": "Local CARE backend profile for creating the first demo facility seed run.",
+  "allowed_hosts": [
+    "localhost",
+    "127.0.0.1"
+  ],
+  "geo_organization_external_id": "0aa83600-7676-4372-9dd9-174624137f87",
+  "default_facility_ref": "facility:main",
+  "notes": [
+    "The geo_organization_external_id points to the local Kerala govt organization fixture. Update it if your local database uses a different UUID."
+  ]
+}
