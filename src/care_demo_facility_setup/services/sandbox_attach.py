@@ -198,3 +198,85 @@ def summarize_seed_run(run: SeedRun) -> dict:
         if summary is not None:
             loaded[_SUMMARY_KEYS.get(step.key, step.key)] = summary
     return loaded
+
+
+def _int_or_zero(stats: dict, key: str) -> int:
+    value = stats.get(key)
+    return value if _is_int(value) else 0
+
+
+def _has_int(stats: dict, *keys: str) -> bool:
+    return any(_is_int(stats.get(key)) for key in keys)
+
+
+def _created_reused_total(stats: dict) -> int | None:
+    """Sum created+reused when either is tracked; else created alone."""
+    if not _has_int(stats, "created", "reused"):
+        return None
+    return _int_or_zero(stats, "created") + _int_or_zero(stats, "reused")
+
+
+def _emit_counts_from_stats(loaded: dict, key: str, stats) -> None:
+    """Map one step's stats into flat resource→int entries (no seeder messages)."""
+    if stats is True or stats is None or stats == {}:
+        return
+    if isinstance(stats, bool):
+        return
+    if _is_int(stats):
+        loaded[key] = stats
+        return
+    if not isinstance(stats, dict):
+        return
+
+    if key == "facility":
+        attached = stats.get("attached")
+        created = stats.get("created")
+        if (_is_int(attached) and attached) or (_is_int(created) and created):
+            loaded["facility"] = 1
+        return
+
+    if key == "facility_foundation":
+        if _has_int(stats, "departments_created", "departments_reused"):
+            loaded["departments"] = _int_or_zero(stats, "departments_created") + _int_or_zero(
+                stats, "departments_reused"
+            )
+        if _is_int(stats.get("locations_created")):
+            loaded["locations"] = stats["locations_created"]
+        if _is_int(stats.get("healthcare_services_created")):
+            loaded["healthcare_services"] = stats["healthcare_services_created"]
+        return
+
+    if key == "inventory_items":
+        if _is_int(stats.get("created")):
+            loaded["product_knowledges"] = stats["created"]
+        if _is_int(stats.get("products_received")):
+            loaded["products"] = stats["products_received"]
+        return
+
+    if key in {"patients", "clinical_visits"}:
+        created = stats.get("created")
+        if _is_int(created):
+            loaded[key] = created
+        return
+
+    total = _created_reused_total(stats)
+    if total is not None:
+        loaded[key] = total
+
+
+def summarize_seed_run_counts(run: SeedRun) -> dict:
+    """Map SeedRun steps into flat resource→count ints for Experience Loaded data.
+
+    Ignores seeder ``message`` strings; reads ``stats`` only. Skips ``validate``
+    and non-SUCCEEDED steps. Returns only resource→int counts (no ``_meta``).
+    Omits transfer/beds noise.
+    """
+    loaded: dict = {}
+    for step in run.steps.all().order_by("order"):
+        if step.key == "validate":
+            continue
+        status = step.status.value if hasattr(step.status, "value") else step.status
+        if status != SeedRunStepStatus.SUCCEEDED:
+            continue
+        _emit_counts_from_stats(loaded, step.key, getattr(step, "stats", None))
+    return loaded

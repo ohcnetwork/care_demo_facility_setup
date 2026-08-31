@@ -7,94 +7,96 @@ from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 from care_demo_facility_setup.models import SeedRunStatus, SeedRunStepStatus
-from care_demo_facility_setup.services.sandbox_attach import summarize_seed_run
+from care_demo_facility_setup.services.sandbox_attach import (
+    summarize_seed_run,
+    summarize_seed_run_counts,
+)
 from care_demo_facility_setup.services.seed_errors import SeedRunExecutionError
+
+
+def _run_with_steps(steps, *, external_id="11111111-1111-1111-1111-111111111111"):
+    return SimpleNamespace(
+        external_id=external_id,
+        pack_slug="generic_hospital_v1",
+        profile_slug="local",
+        steps=SimpleNamespace(all=lambda: SimpleNamespace(order_by=lambda *_: steps)),
+    )
 
 
 class SummarizeSeedRunTests(TestCase):
     def test_prefers_message_and_formats_stats(self):
-        run = SimpleNamespace(
-            external_id="11111111-1111-1111-1111-111111111111",
-            pack_slug="generic_hospital_v1",
-            profile_slug="local",
-            steps=SimpleNamespace(
-                all=lambda: SimpleNamespace(
-                    order_by=lambda *_: [
-                        SimpleNamespace(
-                            key="validate",
-                            status=SeedRunStepStatus.SUCCEEDED,
-                            message="ok",
-                            stats={"patients": 10},
-                        ),
-                        SimpleNamespace(
-                            key="facility",
-                            status=SeedRunStepStatus.SUCCEEDED,
-                            message="Attached existing facility Sunrise Clinic",
-                            stats={"created": 0, "attached": 1},
-                        ),
-                        SimpleNamespace(
-                            key="patients",
-                            status=SeedRunStepStatus.SUCCEEDED,
-                            message="",
-                            stats={"created": 10},
-                        ),
-                        SimpleNamespace(
-                            key="inventory_items",
-                            status=SeedRunStepStatus.SUCCEEDED,
-                            message="",
-                            stats={
-                                "created": 318,
-                                "products_received": 318,
-                                "transferred": 318,
-                            },
-                        ),
-                        SimpleNamespace(
-                            key="clinical_visits",
-                            status=SeedRunStepStatus.SUCCEEDED,
-                            message=(
-                                "Created 25 clinical visits "
-                                "(20 closed OP, 3 IP, 2 emergency, 3 beds)."
-                            ),
-                            stats={
-                                "created": 25,
-                                "op_closed": 20,
-                                "ip_in_progress": 3,
-                                "emergency": 2,
-                                "beds_assigned": 3,
-                            },
-                        ),
-                        SimpleNamespace(
-                            key="questionnaires",
-                            status=SeedRunStepStatus.SUCCEEDED,
-                            message="",
-                            stats={"created": 12, "reused": 3},
-                        ),
-                        SimpleNamespace(
-                            key="facility_foundation",
-                            status=SeedRunStepStatus.SUCCEEDED,
-                            message="",
-                            stats={
-                                "departments_created": 4,
-                                "departments_reused": 1,
-                                "locations_created": 8,
-                                "healthcare_services_created": 6,
-                            },
-                        ),
-                        SimpleNamespace(
-                            key="schedules",
-                            status=SeedRunStepStatus.SUCCEEDED,
-                            message="",
-                            stats={},
-                        ),
-                        SimpleNamespace(
-                            key="token_categories",
-                            status=SeedRunStepStatus.FAILED,
-                            message="boom",
-                            stats={},
-                        ),
-                    ]
-                )
-            ),
+        run = _run_with_steps(
+            [
+                SimpleNamespace(
+                    key="validate",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="ok",
+                    stats={"patients": 10},
+                ),
+                SimpleNamespace(
+                    key="facility",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="Attached existing facility Sunrise Clinic",
+                    stats={"created": 0, "attached": 1},
+                ),
+                SimpleNamespace(
+                    key="patients",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={"created": 10},
+                ),
+                SimpleNamespace(
+                    key="inventory_items",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={
+                        "created": 318,
+                        "products_received": 318,
+                        "transferred": 318,
+                    },
+                ),
+                SimpleNamespace(
+                    key="clinical_visits",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message=("Created 25 clinical visits (20 closed OP, 3 IP, 2 emergency, 3 beds)."),
+                    stats={
+                        "created": 25,
+                        "op_closed": 20,
+                        "ip_in_progress": 3,
+                        "emergency": 2,
+                        "beds_assigned": 3,
+                    },
+                ),
+                SimpleNamespace(
+                    key="questionnaires",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={"created": 12, "reused": 3},
+                ),
+                SimpleNamespace(
+                    key="facility_foundation",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={
+                        "departments_created": 4,
+                        "departments_reused": 1,
+                        "locations_created": 8,
+                        "healthcare_services_created": 6,
+                    },
+                ),
+                SimpleNamespace(
+                    key="schedules",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={},
+                ),
+                SimpleNamespace(
+                    key="token_categories",
+                    status=SeedRunStepStatus.FAILED,
+                    message="boom",
+                    stats={},
+                ),
+            ]
         )
         loaded = summarize_seed_run(run)
         self.assertEqual(
@@ -128,25 +130,171 @@ class SummarizeSeedRunTests(TestCase):
         )
 
     def test_formats_facility_attached_from_stats_without_message(self):
-        run = SimpleNamespace(
+        run = _run_with_steps(
+            [
+                SimpleNamespace(
+                    key="facility",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={"created": 0, "attached": 1},
+                ),
+            ],
             external_id="22222222-2222-2222-2222-222222222222",
-            pack_slug="generic_hospital_v1",
-            profile_slug="local",
-            steps=SimpleNamespace(
-                all=lambda: SimpleNamespace(
-                    order_by=lambda *_: [
-                        SimpleNamespace(
-                            key="facility",
-                            status=SeedRunStepStatus.SUCCEEDED,
-                            message="",
-                            stats={"created": 0, "attached": 1},
-                        ),
-                    ]
-                )
-            ),
         )
         loaded = summarize_seed_run(run)
         self.assertEqual(loaded["facility"], "1 attached")
+
+
+class SummarizeSeedRunCountsTests(TestCase):
+    def test_maps_inventory_clinical_and_foundation_to_ints(self):
+        run = _run_with_steps(
+            [
+                SimpleNamespace(
+                    key="validate",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="ok",
+                    stats={"patients": 10},
+                ),
+                SimpleNamespace(
+                    key="facility",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="Attached existing facility Sunrise Clinic",
+                    stats={"created": 0, "attached": 1},
+                ),
+                SimpleNamespace(
+                    key="facility_users",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="Ensured 7 users",
+                    stats={"created": 5, "reused": 2},
+                ),
+                SimpleNamespace(
+                    key="facility_foundation",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="Created foundation resources...",
+                    stats={
+                        "departments_created": 4,
+                        "departments_reused": 1,
+                        "locations_created": 8,
+                        "healthcare_services_created": 6,
+                    },
+                ),
+                SimpleNamespace(
+                    key="schedules",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={"created": 3, "reused": 1},
+                ),
+                SimpleNamespace(
+                    key="token_categories",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={"created": 2, "reused": 0},
+                ),
+                SimpleNamespace(
+                    key="questionnaires",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={"created": 12, "reused": 3},
+                ),
+                SimpleNamespace(
+                    key="specimen_definitions",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={"created": 9},
+                ),
+                SimpleNamespace(
+                    key="charge_item_definitions",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={"created": 40, "categories_created": 5},
+                ),
+                SimpleNamespace(
+                    key="inventory_items",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="Created 318 product knowledges...",
+                    stats={
+                        "created": 318,
+                        "products_received": 318,
+                        "transferred": 318,
+                        "categories_created": 12,
+                    },
+                ),
+                SimpleNamespace(
+                    key="patients",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="Created 10 patients.",
+                    stats={"created": 10},
+                ),
+                SimpleNamespace(
+                    key="clinical_visits",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message=("Created 25 clinical visits (20 closed OP, 3 IP, 2 emergency, 3 beds)."),
+                    stats={
+                        "created": 25,
+                        "op_closed": 20,
+                        "ip_in_progress": 3,
+                        "emergency": 2,
+                        "beds_assigned": 3,
+                    },
+                ),
+                SimpleNamespace(
+                    key="schedules_empty",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="",
+                    stats={},
+                ),
+                SimpleNamespace(
+                    key="failed_step",
+                    status=SeedRunStepStatus.FAILED,
+                    message="boom",
+                    stats={"created": 99},
+                ),
+            ]
+        )
+        loaded = summarize_seed_run_counts(run)
+
+        self.assertNotIn("_meta", loaded)
+        self.assertNotIn("validate", loaded)
+        self.assertNotIn("failed_step", loaded)
+        self.assertNotIn("schedules_empty", loaded)
+        self.assertNotIn("facility_foundation", loaded)
+        self.assertNotIn("inventory_items", loaded)
+        self.assertNotIn("transferred", loaded)
+        self.assertNotIn("beds_assigned", loaded)
+        self.assertNotIn("op_closed", loaded)
+
+        self.assertEqual(loaded["facility"], 1)
+        self.assertEqual(loaded["facility_users"], 7)
+        self.assertEqual(loaded["departments"], 5)
+        self.assertEqual(loaded["locations"], 8)
+        self.assertEqual(loaded["healthcare_services"], 6)
+        self.assertEqual(loaded["schedules"], 4)
+        self.assertEqual(loaded["token_categories"], 2)
+        self.assertEqual(loaded["questionnaires"], 15)
+        self.assertEqual(loaded["specimen_definitions"], 9)
+        self.assertEqual(loaded["charge_item_definitions"], 40)
+        self.assertEqual(loaded["product_knowledges"], 318)
+        self.assertEqual(loaded["products"], 318)
+        self.assertEqual(loaded["patients"], 10)
+        self.assertEqual(loaded["clinical_visits"], 25)
+        self.assertIsInstance(loaded["patients"], int)
+        self.assertIsInstance(loaded["product_knowledges"], int)
+
+    def test_facility_created_counts_as_one(self):
+        run = _run_with_steps(
+            [
+                SimpleNamespace(
+                    key="facility",
+                    status=SeedRunStepStatus.SUCCEEDED,
+                    message="Created facility",
+                    stats={"created": 1},
+                ),
+            ],
+            external_id="33333333-3333-3333-3333-333333333333",
+        )
+        loaded = summarize_seed_run_counts(run)
+        self.assertEqual(loaded["facility"], 1)
+        self.assertIsInstance(loaded["facility"], int)
 
 
 class SeedExistingFacilityGuardsTests(TestCase):
