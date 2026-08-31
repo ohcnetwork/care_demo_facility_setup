@@ -1,0 +1,152 @@
+{
+  "title": "IP Vitals Form",
+  "slug": "demo-ip-vitals-form",
+  "description": "",
+  "questions": [
+    {
+      "id": "24c7506a-959c-4f15-8f88-302601fd2409",
+      "text": "Vitals",
+      "type": "group",
+      "link_id": "Q-1771951513420",
+      "repeats": false,
+      "questions": [
+        {
+          "id": "d38064b9-7fba-48b8-8ae1-90a38fcf8cdf",
+          "code": {
+            "code": "8310-5",
+            "system": "http://loinc.org",
+            "display": "Body temperature"
+          },
+          "text": "Temperature",
+          "type": "decimal",
+          "unit": {
+            "code": "[degF]",
+            "system": "http://unitsofmeasure.org",
+            "display": "degree Fahrenheit"
+          },
+          "link_id": "Q-1771951561336"
+        },
+        {
+          "id": "1257b47e-99c1-43b7-95a0-953b951242fc",
+          "code": {
+            "code": "8867-4",
+            "system": "http://loinc.org",
+            "display": "Heart rate"
+          },
+          "text": "Pulse rate",
+          "type": "integer",
+          "unit": {
+            "code": "{Beats}/min",
+            "system": "http://unitsofmeasure.org",
+            "display": "Beats / minute"
+          },
+          "link_id": "Q-1771951597036"
+        },
+        {
+          "id": "2fc8ecc1-c4dc-447b-ac01-e6ec8dda0246",
+          "code": {
+            "code": "9279-1",
+            "system": "http://loinc.org",
+            "display": "Respiratory rate"
+          },
+          "text": "Respiratory rate ",
+          "type": "integer",
+          "unit": {
+            "code": "{Breaths}/min",
+            "system": "http://unitsofmeasure.org",
+            "display": "Breaths / minute"
+          },
+          "link_id": "Q-1771951747429"
+        },
+        {
+          "id": "e67bfb1b-f534-4db5-b712-a75978b043bb",
+          "code": {
+            "code": "2708-6",
+            "system": "http://loinc.org",
+            "display": "Oxygen saturation in Arterial blood"
+          },
+          "text": "SpO2",
+          "type": "decimal",
+          "unit": {
+            "code": "%",
+            "system": "http://unitsofmeasure.org",
+            "display": "percent"
+          },
+          "link_id": "Q-1771951931530"
+        }
+      ],
+      "styling_metadata": {
+        "containerClasses": "grid grid-cols-2"
+      }
+    },
+    {
+      "id": "9ee630a2-1191-4223-8565-e8ba95967398",
+      "text": "Blood Pressure",
+      "type": "group",
+      "link_id": "Q-1777900953043",
+      "repeats": false,
+      "questions": [
+        {
+          "id": "79d2c552-023c-4f76-97ad-32deafacbb3b",
+          "code": {
+            "code": "8480-6  ",
+            "system": "http://loinc.org",
+            "display": "Systolic blood pressure"
+          },
+          "text": "Systolic Blood Pressure",
+          "type": "integer",
+          "unit": {
+            "code": "mm[Hg]",
+            "system": "http://unitsofmeasure.org",
+            "display": "millimeter of mercury"
+          },
+          "link_id": "Q-1777900965449"
+        },
+        {
+          "id": "23c31dde-c075-4e56-aa03-086e9cecd202",
+          "code": {
+            "code": "8462-4 ",
+            "system": "http://loinc.org",
+            "display": "Diastolic blood pressure"
+          },
+          "text": "Diastolic Blood Pressure",
+          "type": "integer",
+          "unit": {
+            "code": "mm[Hg]",
+            "system": "http://unitsofmeasure.org",
+            "display": "millimeter of mercury"
+          },
+          "link_id": "Q-1777901005602"
+        }
+      ],
+      "styling_metadata": {
+        "containerClasses": "grid grid-cols-2"
+      }
+    },
+    {
+      "id": "f8d91a84-30da-445d-a3ea-7937fa741007",
+      "code": {
+        "code": "2339-0",
+        "system": "http://loinc.org",
+        "display": "Glucose [Mass/volume] in Blood"
+      },
+      "text": "GRBS",
+      "type": "integer",
+      "unit": {
+        "code": "mg/dL",
+        "system": "http://unitsofmeasure.org",
+        "display": "milligram per deciliter"
+      },
+      "link_id": "Q-1775054274547"
+    },
+    {
+      "id": "689e2bc1-3f7f-42d7-88e1-b3a70cf88372",
+      "text": "Notes",
+      "type": "string",
+      "link_id": "Q-1784913616226"
+    }
+  ],
+  "status": "active",
+  "subject_type": "encounter",
+  "version": 0.1
+}
