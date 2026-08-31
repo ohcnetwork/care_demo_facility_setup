@@ -113,7 +113,14 @@ class CareSeedClient:
         return self.base.create_request_order(facility_id, **payload)
 
     def update_request_order(self, facility_id: str, order_id: str, payload: dict):
-        return self.base.update_request_order(facility_id, order_id, **payload)
+        url = reverse(
+            "request-order-detail",
+            kwargs={
+                "facility_external_id": facility_id,
+                "external_id": order_id,
+            },
+        )
+        return self.base.patch(url, payload)
 
     def create_supply_request(self, payload: dict):
         return self.base.create_supply_request(**payload)
@@ -122,7 +129,14 @@ class CareSeedClient:
         return self.base.create_delivery_order(facility_id, **payload)
 
     def update_delivery_order(self, facility_id: str, order_id: str, payload: dict):
-        return self.base.update_delivery_order(facility_id, order_id, **payload)
+        url = reverse(
+            "delivery-order-detail",
+            kwargs={
+                "facility_external_id": facility_id,
+                "external_id": order_id,
+            },
+        )
+        return self.base.patch(url, payload)
 
     def create_supply_delivery(self, payload: dict):
         return self.base.create_supply_delivery(**payload)
@@ -184,7 +198,9 @@ class CareSeedClient:
         return self.base.post(url, payload)
 
     def get_roles(self):
-        return self.base.get_roles()
+        data = self.base.get(reverse("role-list"), params={"limit": 200})
+        results = data.get("results", data)
+        return {role.name: role for role in results}
 
     def create_user(self, geo_organization: str, payload: dict):
         return self.base.create_user(geo_organization, **payload)
